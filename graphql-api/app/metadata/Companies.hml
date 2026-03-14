@@ -1,0 +1,191 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Companies
+  fields:
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: name
+      type: String_1!
+  graphql:
+    typeName: Companies
+    inputTypeName: CompaniesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: companies
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        name:
+          column:
+            name: name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Companies
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - name
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: CompaniesBoolExp
+  operand:
+    object:
+      type: Companies
+      comparableFields:
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: name
+          booleanExpressionType: TextBoolExp
+      comparableRelationships:
+        - relationshipName: receipts
+        - relationshipName: users
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: CompaniesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: CompaniesAggExp
+  operand:
+    object:
+      aggregatedType: Companies
+      aggregatableFields:
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: name
+          aggregateExpression: TextAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: CompaniesAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: CompaniesOrderByExp
+  operand:
+    object:
+      orderedType: Companies
+      orderableFields:
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: name
+          orderByExpression: String1OrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: CompaniesOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: Companies
+  objectType: Companies
+  source:
+    dataConnectorName: my_pg
+    collection: companies
+  filterExpressionType: CompaniesBoolExp
+  aggregateExpression: CompaniesAggExp
+  orderByExpression: CompaniesOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: companies
+      subscription:
+        rootField: companies
+    selectUniques:
+      - queryRootField: companiesById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: companiesById
+    filterInputTypeName: CompaniesFilterInput
+    aggregate:
+      queryRootField: companiesAggregate
+      subscription:
+        rootField: companiesAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Companies
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: receipts
+  sourceType: Companies
+  target:
+    model:
+      name: Receipts
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: ReceiptsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: companyId
+  graphql:
+    aggregateFieldName: receiptsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: users
+  sourceType: Companies
+  target:
+    model:
+      name: Users
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: UsersAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: companyId
+  graphql:
+    aggregateFieldName: usersAggregate
+

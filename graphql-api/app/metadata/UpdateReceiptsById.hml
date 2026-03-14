@@ -1,0 +1,455 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnReceiptsCompanyId
+  description: Update the 'company_id' column in the 'receipts' collection
+  fields:
+    - name: set
+      type: Uuid!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnReceiptsCompanyId
+    inputTypeName: UpdateColumnReceiptsCompanyIdInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_column_receipts_company_id
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnReceiptsCompanyId
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnReceiptsCreatedAt
+  description: Update the 'created_at' column in the 'receipts' collection
+  fields:
+    - name: set
+      type: Timestamptz
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnReceiptsCreatedAt
+    inputTypeName: UpdateColumnReceiptsCreatedAtInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_column_receipts_created_at
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnReceiptsCreatedAt
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnReceiptsId
+  description: Update the 'id' column in the 'receipts' collection
+  fields:
+    - name: set
+      type: Uuid!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnReceiptsId
+    inputTypeName: UpdateColumnReceiptsIdInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_column_receipts_id
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnReceiptsId
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnReceiptsImageUrl
+  description: Update the 'image_url' column in the 'receipts' collection
+  fields:
+    - name: set
+      type: String_1
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnReceiptsImageUrl
+    inputTypeName: UpdateColumnReceiptsImageUrlInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_column_receipts_image_url
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnReceiptsImageUrl
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnReceiptsReceiptDate
+  description: Update the 'receipt_date' column in the 'receipts' collection
+  fields:
+    - name: set
+      type: Date!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnReceiptsReceiptDate
+    inputTypeName: UpdateColumnReceiptsReceiptDateInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_column_receipts_receipt_date
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnReceiptsReceiptDate
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnReceiptsStatus
+  description: Update the 'status' column in the 'receipts' collection
+  fields:
+    - name: set
+      type: String_1
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnReceiptsStatus
+    inputTypeName: UpdateColumnReceiptsStatusInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_column_receipts_status
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnReceiptsStatus
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnReceiptsTotalAmount
+  description: Update the 'total_amount' column in the 'receipts' collection
+  fields:
+    - name: set
+      type: Bigdecimal!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnReceiptsTotalAmount
+    inputTypeName: UpdateColumnReceiptsTotalAmountInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_column_receipts_total_amount
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnReceiptsTotalAmount
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnReceiptsUserId
+  description: Update the 'user_id' column in the 'receipts' collection
+  fields:
+    - name: set
+      type: Uuid!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnReceiptsUserId
+    inputTypeName: UpdateColumnReceiptsUserIdInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_column_receipts_user_id
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnReceiptsUserId
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateColumnReceiptsVendorName
+  description: Update the 'vendor_name' column in the 'receipts' collection
+  fields:
+    - name: set
+      type: String_1!
+      description: Set the column to this value
+  graphql:
+    typeName: UpdateColumnReceiptsVendorName
+    inputTypeName: UpdateColumnReceiptsVendorNameInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_column_receipts_vendor_name
+      fieldMapping:
+        set:
+          column:
+            name: _set
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateColumnReceiptsVendorName
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - set
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateReceiptsByIdUpdateColumns
+  description: Update the columns of the 'receipts' collection
+  fields:
+    - name: companyId
+      type: UpdateColumnReceiptsCompanyId
+      description: Update the 'company_id' column in the 'receipts' collection.
+    - name: createdAt
+      type: UpdateColumnReceiptsCreatedAt
+      description: Update the 'created_at' column in the 'receipts' collection.
+    - name: id
+      type: UpdateColumnReceiptsId
+      description: Update the 'id' column in the 'receipts' collection.
+    - name: imageUrl
+      type: UpdateColumnReceiptsImageUrl
+      description: Update the 'image_url' column in the 'receipts' collection.
+    - name: receiptDate
+      type: UpdateColumnReceiptsReceiptDate
+      description: Update the 'receipt_date' column in the 'receipts' collection.
+    - name: status
+      type: UpdateColumnReceiptsStatus
+      description: Update the 'status' column in the 'receipts' collection.
+    - name: totalAmount
+      type: UpdateColumnReceiptsTotalAmount
+      description: Update the 'total_amount' column in the 'receipts' collection.
+    - name: userId
+      type: UpdateColumnReceiptsUserId
+      description: Update the 'user_id' column in the 'receipts' collection.
+    - name: vendorName
+      type: UpdateColumnReceiptsVendorName
+      description: Update the 'vendor_name' column in the 'receipts' collection.
+  graphql:
+    typeName: UpdateReceiptsByIdUpdateColumns
+    inputTypeName: UpdateReceiptsByIdUpdateColumnsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_receipts_by_id_update_columns
+      fieldMapping:
+        companyId:
+          column:
+            name: company_id
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        imageUrl:
+          column:
+            name: image_url
+        receiptDate:
+          column:
+            name: receipt_date
+        status:
+          column:
+            name: status
+        totalAmount:
+          column:
+            name: total_amount
+        userId:
+          column:
+            name: user_id
+        vendorName:
+          column:
+            name: vendor_name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateReceiptsByIdUpdateColumns
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - companyId
+          - createdAt
+          - id
+          - imageUrl
+          - receiptDate
+          - status
+          - totalAmount
+          - userId
+          - vendorName
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UpdateReceiptsByIdResponse
+  description: Responses from the 'update_receipts_by_id' procedure
+  fields:
+    - name: affectedRows
+      type: Int32!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Receipts!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: UpdateReceiptsByIdResponse
+    inputTypeName: UpdateReceiptsByIdResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: update_receipts_by_id_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UpdateReceiptsByIdResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: UpdateReceiptsById
+  outputType: UpdateReceiptsByIdResponse!
+  arguments:
+    - name: keyId
+      type: Uuid!
+    - name: postCheck
+      type: ReceiptsBoolExp
+      description: Update permission post-condition predicate over the 'receipts' collection
+    - name: preCheck
+      type: ReceiptsBoolExp
+      description: Update permission pre-condition predicate over the 'receipts' collection
+    - name: updateColumns
+      type: UpdateReceiptsByIdUpdateColumns!
+  source:
+    dataConnectorName: my_pg
+    dataConnectorCommand:
+      procedure: update_receipts_by_id
+    argumentMapping:
+      keyId: key_id
+      postCheck: post_check
+      preCheck: pre_check
+      updateColumns: update_columns
+  graphql:
+    rootFieldName: updateReceiptsById
+    rootFieldKind: Mutation
+  description: Update any row on the 'receipts' collection using the 'id' key
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: UpdateReceiptsById
+  permissions:
+    - role: admin
+      allowExecution: true
+

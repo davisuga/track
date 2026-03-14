@@ -1,0 +1,72 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: DeleteReceiptItemsByIdResponse
+  description: Responses from the 'delete_receipt_items_by_id' procedure
+  fields:
+    - name: affectedRows
+      type: Int32!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[ReceiptItems!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: DeleteReceiptItemsByIdResponse
+    inputTypeName: DeleteReceiptItemsByIdResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: delete_receipt_items_by_id_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: DeleteReceiptItemsByIdResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: DeleteReceiptItemsById
+  outputType: DeleteReceiptItemsByIdResponse!
+  arguments:
+    - name: keyId
+      type: Uuid!
+    - name: preCheck
+      type: ReceiptItemsBoolExp
+      description: Delete permission predicate over the 'receipt_items' collection
+  source:
+    dataConnectorName: my_pg
+    dataConnectorCommand:
+      procedure: delete_receipt_items_by_id
+    argumentMapping:
+      keyId: key_id
+      preCheck: pre_check
+  graphql:
+    rootFieldName: deleteReceiptItemsById
+    rootFieldKind: Mutation
+  description: Delete any row on the 'receipt_items' collection using the 'id' key
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: DeleteReceiptItemsById
+  permissions:
+    - role: admin
+      allowExecution: true
+

@@ -1,0 +1,114 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertCompaniesObject
+  fields:
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid
+    - name: name
+      type: String_1!
+  graphql:
+    typeName: InsertCompaniesObject
+    inputTypeName: InsertCompaniesObjectInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: insert_companies_object
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        name:
+          column:
+            name: name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertCompaniesObject
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - id
+          - name
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertCompaniesResponse
+  description: Responses from the 'insert_companies' procedure
+  fields:
+    - name: affectedRows
+      type: Int32!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[Companies!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: InsertCompaniesResponse
+    inputTypeName: InsertCompaniesResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: insert_companies_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertCompaniesResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: InsertCompanies
+  outputType: InsertCompaniesResponse!
+  arguments:
+    - name: objects
+      type: "[InsertCompaniesObject!]!"
+    - name: postCheck
+      type: CompaniesBoolExp
+      description: Insert permission predicate over the 'companies' collection
+  source:
+    dataConnectorName: my_pg
+    dataConnectorCommand:
+      procedure: insert_companies
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertCompanies
+    rootFieldKind: Mutation
+  description: Insert into the companies table
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertCompanies
+  permissions:
+    - role: admin
+      allowExecution: true
+

@@ -1,0 +1,150 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertReceiptItemsObject
+  fields:
+    - name: category
+      type: String_1
+    - name: createdAt
+      type: Timestamptz
+    - name: description
+      type: String_1!
+    - name: id
+      type: Uuid
+    - name: isPriceAnomaly
+      type: Boolean_1
+    - name: quantity
+      type: Bigdecimal
+    - name: receiptId
+      type: Uuid!
+    - name: totalPrice
+      type: Bigdecimal!
+    - name: unitPrice
+      type: Bigdecimal!
+  graphql:
+    typeName: InsertReceiptItemsObject
+    inputTypeName: InsertReceiptItemsObjectInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: insert_receipt_items_object
+      fieldMapping:
+        category:
+          column:
+            name: category
+        createdAt:
+          column:
+            name: created_at
+        description:
+          column:
+            name: description
+        id:
+          column:
+            name: id
+        isPriceAnomaly:
+          column:
+            name: is_price_anomaly
+        quantity:
+          column:
+            name: quantity
+        receiptId:
+          column:
+            name: receipt_id
+        totalPrice:
+          column:
+            name: total_price
+        unitPrice:
+          column:
+            name: unit_price
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertReceiptItemsObject
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - category
+          - createdAt
+          - description
+          - id
+          - isPriceAnomaly
+          - quantity
+          - receiptId
+          - totalPrice
+          - unitPrice
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertReceiptItemsResponse
+  description: Responses from the 'insert_receipt_items' procedure
+  fields:
+    - name: affectedRows
+      type: Int32!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[ReceiptItems!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: InsertReceiptItemsResponse
+    inputTypeName: InsertReceiptItemsResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: insert_receipt_items_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertReceiptItemsResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: InsertReceiptItems
+  outputType: InsertReceiptItemsResponse!
+  arguments:
+    - name: objects
+      type: "[InsertReceiptItemsObject!]!"
+    - name: postCheck
+      type: ReceiptItemsBoolExp
+      description: Insert permission predicate over the 'receipt_items' collection
+  source:
+    dataConnectorName: my_pg
+    dataConnectorCommand:
+      procedure: insert_receipt_items
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertReceiptItems
+    rootFieldKind: Mutation
+  description: Insert into the receipt_items table
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertReceiptItems
+  permissions:
+    - role: admin
+      allowExecution: true
+

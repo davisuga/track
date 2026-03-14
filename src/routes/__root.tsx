@@ -2,7 +2,16 @@ import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from '@tanstack/react-query'
 import appCss from "../styles.css?url"
+
+const queryClient = new QueryClient()
+
+
 
 export const Route = createRootRoute({
   head: () => ({
@@ -35,7 +44,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
+        <QueryClientProvider client={queryClient}>
         {children}
+        {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
         <TanStackDevtools
           config={{
             position: "bottom-right",
@@ -48,6 +59,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
           ]}
         />
         <Scripts />
+        </QueryClientProvider>
       </body>
     </html>
   )

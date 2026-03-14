@@ -1,0 +1,237 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: ReceiptItems
+  fields:
+    - name: category
+      type: String_1
+    - name: createdAt
+      type: Timestamptz
+    - name: description
+      type: String_1!
+    - name: id
+      type: Uuid!
+    - name: isPriceAnomaly
+      type: Boolean_1
+    - name: quantity
+      type: Bigdecimal
+    - name: receiptId
+      type: Uuid!
+    - name: totalPrice
+      type: Bigdecimal!
+    - name: unitPrice
+      type: Bigdecimal!
+  graphql:
+    typeName: ReceiptItems
+    inputTypeName: ReceiptItemsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: receipt_items
+      fieldMapping:
+        category:
+          column:
+            name: category
+        createdAt:
+          column:
+            name: created_at
+        description:
+          column:
+            name: description
+        id:
+          column:
+            name: id
+        isPriceAnomaly:
+          column:
+            name: is_price_anomaly
+        quantity:
+          column:
+            name: quantity
+        receiptId:
+          column:
+            name: receipt_id
+        totalPrice:
+          column:
+            name: total_price
+        unitPrice:
+          column:
+            name: unit_price
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: ReceiptItems
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - category
+          - createdAt
+          - description
+          - id
+          - isPriceAnomaly
+          - quantity
+          - receiptId
+          - totalPrice
+          - unitPrice
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ReceiptItemsBoolExp
+  operand:
+    object:
+      type: ReceiptItems
+      comparableFields:
+        - fieldName: category
+          booleanExpressionType: TextBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: isPriceAnomaly
+          booleanExpressionType: BoolBoolExp
+        - fieldName: quantity
+          booleanExpressionType: NumericBoolExp
+        - fieldName: receiptId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: totalPrice
+          booleanExpressionType: NumericBoolExp
+        - fieldName: unitPrice
+          booleanExpressionType: NumericBoolExp
+      comparableRelationships:
+        - relationshipName: receipt
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: ReceiptItemsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ReceiptItemsAggExp
+  operand:
+    object:
+      aggregatedType: ReceiptItems
+      aggregatableFields:
+        - fieldName: category
+          aggregateExpression: TextAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: isPriceAnomaly
+          aggregateExpression: BoolAggExp
+        - fieldName: quantity
+          aggregateExpression: NumericAggExp
+        - fieldName: receiptId
+          aggregateExpression: UuidAggExp
+        - fieldName: totalPrice
+          aggregateExpression: NumericAggExp
+        - fieldName: unitPrice
+          aggregateExpression: NumericAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: ReceiptItemsAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: ReceiptItemsOrderByExp
+  operand:
+    object:
+      orderedType: ReceiptItems
+      orderableFields:
+        - fieldName: category
+          orderByExpression: String1OrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: description
+          orderByExpression: String1OrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: isPriceAnomaly
+          orderByExpression: Boolean1OrderByExp
+        - fieldName: quantity
+          orderByExpression: BigdecimalOrderByExp
+        - fieldName: receiptId
+          orderByExpression: UuidOrderByExp
+        - fieldName: totalPrice
+          orderByExpression: BigdecimalOrderByExp
+        - fieldName: unitPrice
+          orderByExpression: BigdecimalOrderByExp
+      orderableRelationships:
+        - relationshipName: receipt
+  graphql:
+    expressionTypeName: ReceiptItemsOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: ReceiptItems
+  objectType: ReceiptItems
+  source:
+    dataConnectorName: my_pg
+    collection: receipt_items
+  filterExpressionType: ReceiptItemsBoolExp
+  aggregateExpression: ReceiptItemsAggExp
+  orderByExpression: ReceiptItemsOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: receiptItems
+      subscription:
+        rootField: receiptItems
+    selectUniques:
+      - queryRootField: receiptItemsById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: receiptItemsById
+    filterInputTypeName: ReceiptItemsFilterInput
+    aggregate:
+      queryRootField: receiptItemsAggregate
+      subscription:
+        rootField: receiptItemsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: ReceiptItems
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: receipt
+  sourceType: ReceiptItems
+  target:
+    model:
+      name: Receipts
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: receiptId
+      target:
+        modelField:
+          - fieldName: id
+

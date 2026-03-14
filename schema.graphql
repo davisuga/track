@@ -1,0 +1,965 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+scalar Bigdecimal
+
+type BoolAggExp {
+  _count: Int64!
+  _count_distinct: Int64!
+  bool_and: Boolean1
+  bool_or: Boolean1
+  every: Boolean1
+}
+
+input BoolBoolExp {
+  _and: [BoolBoolExp!]
+  _eq: Boolean1
+  _gt: Boolean1
+  _gte: Boolean1
+  _in: [Boolean1!]
+  _is_null: Boolean
+  _lt: Boolean1
+  _lte: Boolean1
+  _neq: Boolean1
+  _not: BoolBoolExp
+  _or: [BoolBoolExp!]
+}
+
+scalar Boolean1
+
+type Companies {
+  createdAt: Timestamptz
+  id: Uuid!
+  name: String1!
+  receipts(limit: Int, offset: Int, order_by: [ReceiptsOrderByExp!], where: ReceiptsBoolExp): [Receipts!]
+  receiptsAggregate(filter_input: ReceiptsFilterInput): ReceiptsAggExp!
+  users(limit: Int, offset: Int, order_by: [UsersOrderByExp!], where: UsersBoolExp): [Users!]
+  usersAggregate(filter_input: UsersFilterInput): UsersAggExp!
+}
+
+type CompaniesAggExp {
+  _count: Int64!
+  createdAt: TimestamptzAggExp!
+  id: UuidAggExp!
+  name: TextAggExp!
+}
+
+input CompaniesBoolExp {
+  _and: [CompaniesBoolExp!]
+  _not: CompaniesBoolExp
+  _or: [CompaniesBoolExp!]
+  createdAt: TimestamptzBoolExp
+  id: UuidBoolExp
+  name: TextBoolExp
+  receipts: ReceiptsBoolExp
+  users: UsersBoolExp
+}
+
+input CompaniesFilterInput {
+  limit: Int
+  offset: Int
+  order_by: [CompaniesOrderByExp!]
+  where: CompaniesBoolExp
+}
+
+input CompaniesOrderByExp {
+  createdAt: OrderBy
+  id: OrderBy
+  name: OrderBy
+}
+
+scalar Date
+
+type DateAggExp {
+  _count: Int64!
+  _count_distinct: Int64!
+  max: Date
+  min: Date
+}
+
+input DateBoolExp {
+  _and: [DateBoolExp!]
+  _eq: Date
+  _gt: Date
+  _gte: Date
+  _in: [Date!]
+  _is_null: Boolean
+  _lt: Date
+  _lte: Date
+  _neq: Date
+  _not: DateBoolExp
+  _or: [DateBoolExp!]
+}
+
+"""Responses from the 'delete_companies_by_id' procedure"""
+type DeleteCompaniesByIdResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Companies!]!
+}
+
+"""Responses from the 'delete_receipt_items_by_id' procedure"""
+type DeleteReceiptItemsByIdResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [ReceiptItems!]!
+}
+
+"""Responses from the 'delete_receipts_by_id' procedure"""
+type DeleteReceiptsByIdResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Receipts!]!
+}
+
+"""Responses from the 'delete_users_by_email' procedure"""
+type DeleteUsersByEmailResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Users!]!
+}
+
+"""Responses from the 'delete_users_by_id' procedure"""
+type DeleteUsersByIdResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Users!]!
+}
+
+scalar Enum
+
+input InsertCompaniesObjectInput {
+  createdAt: Timestamptz
+  id: Uuid
+  name: String1!
+}
+
+"""Responses from the 'insert_companies' procedure"""
+type InsertCompaniesResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Companies!]!
+}
+
+input InsertReceiptItemsObjectInput {
+  category: String1
+  createdAt: Timestamptz
+  description: String1!
+  id: Uuid
+  isPriceAnomaly: Boolean1
+  quantity: Bigdecimal
+  receiptId: Uuid!
+  totalPrice: Bigdecimal!
+  unitPrice: Bigdecimal!
+}
+
+"""Responses from the 'insert_receipt_items' procedure"""
+type InsertReceiptItemsResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [ReceiptItems!]!
+}
+
+input InsertReceiptsObjectInput {
+  companyId: Uuid!
+  createdAt: Timestamptz
+  id: Uuid
+  imageUrl: String1
+  receiptDate: Date!
+  status: String1
+  totalAmount: Bigdecimal!
+  userId: Uuid!
+  vendorName: String1!
+}
+
+"""Responses from the 'insert_receipts' procedure"""
+type InsertReceiptsResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Receipts!]!
+}
+
+input InsertUsersObjectInput {
+  companyId: Uuid!
+  createdAt: Timestamptz
+  email: String1!
+  fullName: String1!
+  id: Uuid
+  role: Enum!
+}
+
+"""Responses from the 'insert_users' procedure"""
+type InsertUsersResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Users!]!
+}
+
+scalar Int32
+
+scalar Int64
+
+type Mutation {
+  """Delete any row on the 'companies' collection using the 'id' key"""
+  deleteCompaniesById(
+    keyId: Uuid!
+    """Delete permission predicate over the 'companies' collection"""
+    preCheck: CompaniesBoolExp
+  ): DeleteCompaniesByIdResponse!
+  """Delete any row on the 'receipt_items' collection using the 'id' key"""
+  deleteReceiptItemsById(
+    keyId: Uuid!
+    """Delete permission predicate over the 'receipt_items' collection"""
+    preCheck: ReceiptItemsBoolExp
+  ): DeleteReceiptItemsByIdResponse!
+  """Delete any row on the 'receipts' collection using the 'id' key"""
+  deleteReceiptsById(
+    keyId: Uuid!
+    """Delete permission predicate over the 'receipts' collection"""
+    preCheck: ReceiptsBoolExp
+  ): DeleteReceiptsByIdResponse!
+  """Delete any row on the 'users' collection using the 'email' key"""
+  deleteUsersByEmail(
+    keyEmail: String1!
+    """Delete permission predicate over the 'users' collection"""
+    preCheck: UsersBoolExp
+  ): DeleteUsersByEmailResponse!
+  """Delete any row on the 'users' collection using the 'id' key"""
+  deleteUsersById(
+    keyId: Uuid!
+    """Delete permission predicate over the 'users' collection"""
+    preCheck: UsersBoolExp
+  ): DeleteUsersByIdResponse!
+  """Insert into the companies table"""
+  insertCompanies(
+    objects: [InsertCompaniesObjectInput!]!
+    """Insert permission predicate over the 'companies' collection"""
+    postCheck: CompaniesBoolExp
+  ): InsertCompaniesResponse!
+  """Insert into the receipt_items table"""
+  insertReceiptItems(
+    objects: [InsertReceiptItemsObjectInput!]!
+    """Insert permission predicate over the 'receipt_items' collection"""
+    postCheck: ReceiptItemsBoolExp
+  ): InsertReceiptItemsResponse!
+  """Insert into the receipts table"""
+  insertReceipts(
+    objects: [InsertReceiptsObjectInput!]!
+    """Insert permission predicate over the 'receipts' collection"""
+    postCheck: ReceiptsBoolExp
+  ): InsertReceiptsResponse!
+  """Insert into the users table"""
+  insertUsers(
+    objects: [InsertUsersObjectInput!]!
+    """Insert permission predicate over the 'users' collection"""
+    postCheck: UsersBoolExp
+  ): InsertUsersResponse!
+  """Update any row on the 'companies' collection using the 'id' key"""
+  updateCompaniesById(
+    keyId: Uuid!
+    """
+    Update permission post-condition predicate over the 'companies' collection
+    """
+    postCheck: CompaniesBoolExp
+    """
+    Update permission pre-condition predicate over the 'companies' collection
+    """
+    preCheck: CompaniesBoolExp
+    updateColumns: UpdateCompaniesByIdUpdateColumnsInput!
+  ): UpdateCompaniesByIdResponse!
+  """Update any row on the 'receipt_items' collection using the 'id' key"""
+  updateReceiptItemsById(
+    keyId: Uuid!
+    """
+    Update permission post-condition predicate over the 'receipt_items' collection
+    """
+    postCheck: ReceiptItemsBoolExp
+    """
+    Update permission pre-condition predicate over the 'receipt_items' collection
+    """
+    preCheck: ReceiptItemsBoolExp
+    updateColumns: UpdateReceiptItemsByIdUpdateColumnsInput!
+  ): UpdateReceiptItemsByIdResponse!
+  """Update any row on the 'receipts' collection using the 'id' key"""
+  updateReceiptsById(
+    keyId: Uuid!
+    """
+    Update permission post-condition predicate over the 'receipts' collection
+    """
+    postCheck: ReceiptsBoolExp
+    """
+    Update permission pre-condition predicate over the 'receipts' collection
+    """
+    preCheck: ReceiptsBoolExp
+    updateColumns: UpdateReceiptsByIdUpdateColumnsInput!
+  ): UpdateReceiptsByIdResponse!
+  """Update any row on the 'users' collection using the 'email' key"""
+  updateUsersByEmail(
+    keyEmail: String1!
+    """Update permission post-condition predicate over the 'users' collection"""
+    postCheck: UsersBoolExp
+    """Update permission pre-condition predicate over the 'users' collection"""
+    preCheck: UsersBoolExp
+    updateColumns: UpdateUsersByEmailUpdateColumnsInput!
+  ): UpdateUsersByEmailResponse!
+  """Update any row on the 'users' collection using the 'id' key"""
+  updateUsersById(
+    keyId: Uuid!
+    """Update permission post-condition predicate over the 'users' collection"""
+    postCheck: UsersBoolExp
+    """Update permission pre-condition predicate over the 'users' collection"""
+    preCheck: UsersBoolExp
+    updateColumns: UpdateUsersByIdUpdateColumnsInput!
+  ): UpdateUsersByIdResponse!
+}
+
+type NumericAggExp {
+  _count: Int64!
+  _count_distinct: Int64!
+  avg: Bigdecimal
+  max: Bigdecimal
+  min: Bigdecimal
+  stddev: Bigdecimal
+  stddev_pop: Bigdecimal
+  stddev_samp: Bigdecimal
+  sum: Bigdecimal
+  var_pop: Bigdecimal
+  var_samp: Bigdecimal
+  variance: Bigdecimal
+}
+
+input NumericBoolExp {
+  _and: [NumericBoolExp!]
+  _eq: Bigdecimal
+  _gt: Bigdecimal
+  _gte: Bigdecimal
+  _in: [Bigdecimal!]
+  _is_null: Boolean
+  _lt: Bigdecimal
+  _lte: Bigdecimal
+  _neq: Bigdecimal
+  _not: NumericBoolExp
+  _or: [NumericBoolExp!]
+}
+
+enum OrderBy {
+  """Sorts the data in ascending order"""
+  Asc
+  """Sorts the data in descending order"""
+  Desc
+}
+
+type Query {
+  companies(limit: Int, offset: Int, order_by: [CompaniesOrderByExp!], where: CompaniesBoolExp): [Companies!]
+  companiesAggregate(filter_input: CompaniesFilterInput): CompaniesAggExp
+  companiesById(id: Uuid!): Companies
+  receiptItems(limit: Int, offset: Int, order_by: [ReceiptItemsOrderByExp!], where: ReceiptItemsBoolExp): [ReceiptItems!]
+  receiptItemsAggregate(filter_input: ReceiptItemsFilterInput): ReceiptItemsAggExp
+  receiptItemsById(id: Uuid!): ReceiptItems
+  receipts(limit: Int, offset: Int, order_by: [ReceiptsOrderByExp!], where: ReceiptsBoolExp): [Receipts!]
+  receiptsAggregate(filter_input: ReceiptsFilterInput): ReceiptsAggExp
+  receiptsById(id: Uuid!): Receipts
+  users(limit: Int, offset: Int, order_by: [UsersOrderByExp!], where: UsersBoolExp): [Users!]
+  usersAggregate(filter_input: UsersFilterInput): UsersAggExp
+  usersByEmail(email: String1!): Users
+  usersById(id: Uuid!): Users
+}
+
+type ReceiptItems {
+  category: String1
+  createdAt: Timestamptz
+  description: String1!
+  id: Uuid!
+  isPriceAnomaly: Boolean1
+  quantity: Bigdecimal
+  receipt: Receipts
+  receiptId: Uuid!
+  totalPrice: Bigdecimal!
+  unitPrice: Bigdecimal!
+}
+
+type ReceiptItemsAggExp {
+  _count: Int64!
+  category: TextAggExp!
+  createdAt: TimestamptzAggExp!
+  description: TextAggExp!
+  id: UuidAggExp!
+  isPriceAnomaly: BoolAggExp!
+  quantity: NumericAggExp!
+  receiptId: UuidAggExp!
+  totalPrice: NumericAggExp!
+  unitPrice: NumericAggExp!
+}
+
+input ReceiptItemsBoolExp {
+  _and: [ReceiptItemsBoolExp!]
+  _not: ReceiptItemsBoolExp
+  _or: [ReceiptItemsBoolExp!]
+  category: TextBoolExp
+  createdAt: TimestamptzBoolExp
+  description: TextBoolExp
+  id: UuidBoolExp
+  isPriceAnomaly: BoolBoolExp
+  quantity: NumericBoolExp
+  receipt: ReceiptsBoolExp
+  receiptId: UuidBoolExp
+  totalPrice: NumericBoolExp
+  unitPrice: NumericBoolExp
+}
+
+input ReceiptItemsFilterInput {
+  limit: Int
+  offset: Int
+  order_by: [ReceiptItemsOrderByExp!]
+  where: ReceiptItemsBoolExp
+}
+
+input ReceiptItemsOrderByExp {
+  category: OrderBy
+  createdAt: OrderBy
+  description: OrderBy
+  id: OrderBy
+  isPriceAnomaly: OrderBy
+  quantity: OrderBy
+  receipt: ReceiptsOrderByExp
+  receiptId: OrderBy
+  totalPrice: OrderBy
+  unitPrice: OrderBy
+}
+
+type Receipts {
+  company: Companies
+  companyId: Uuid!
+  createdAt: Timestamptz
+  id: Uuid!
+  imageUrl: String1
+  receiptDate: Date!
+  receiptItems(limit: Int, offset: Int, order_by: [ReceiptItemsOrderByExp!], where: ReceiptItemsBoolExp): [ReceiptItems!]
+  receiptItemsAggregate(filter_input: ReceiptItemsFilterInput): ReceiptItemsAggExp!
+  status: String1
+  totalAmount: Bigdecimal!
+  user: Users
+  userId: Uuid!
+  vendorName: String1!
+}
+
+type ReceiptsAggExp {
+  _count: Int64!
+  companyId: UuidAggExp!
+  createdAt: TimestamptzAggExp!
+  id: UuidAggExp!
+  imageUrl: TextAggExp!
+  receiptDate: DateAggExp!
+  status: TextAggExp!
+  totalAmount: NumericAggExp!
+  userId: UuidAggExp!
+  vendorName: TextAggExp!
+}
+
+input ReceiptsBoolExp {
+  _and: [ReceiptsBoolExp!]
+  _not: ReceiptsBoolExp
+  _or: [ReceiptsBoolExp!]
+  company: CompaniesBoolExp
+  companyId: UuidBoolExp
+  createdAt: TimestamptzBoolExp
+  id: UuidBoolExp
+  imageUrl: TextBoolExp
+  receiptDate: DateBoolExp
+  receiptItems: ReceiptItemsBoolExp
+  status: TextBoolExp
+  totalAmount: NumericBoolExp
+  user: UsersBoolExp
+  userId: UuidBoolExp
+  vendorName: TextBoolExp
+}
+
+input ReceiptsFilterInput {
+  limit: Int
+  offset: Int
+  order_by: [ReceiptsOrderByExp!]
+  where: ReceiptsBoolExp
+}
+
+input ReceiptsOrderByExp {
+  company: CompaniesOrderByExp
+  companyId: OrderBy
+  createdAt: OrderBy
+  id: OrderBy
+  imageUrl: OrderBy
+  receiptDate: OrderBy
+  status: OrderBy
+  totalAmount: OrderBy
+  user: UsersOrderByExp
+  userId: OrderBy
+  vendorName: OrderBy
+}
+
+scalar String1
+
+type Subscription {
+  companies(limit: Int, offset: Int, order_by: [CompaniesOrderByExp!], where: CompaniesBoolExp): [Companies!]
+  companiesAggregate(filter_input: CompaniesFilterInput): CompaniesAggExp
+  companiesById(id: Uuid!): Companies
+  receiptItems(limit: Int, offset: Int, order_by: [ReceiptItemsOrderByExp!], where: ReceiptItemsBoolExp): [ReceiptItems!]
+  receiptItemsAggregate(filter_input: ReceiptItemsFilterInput): ReceiptItemsAggExp
+  receiptItemsById(id: Uuid!): ReceiptItems
+  receipts(limit: Int, offset: Int, order_by: [ReceiptsOrderByExp!], where: ReceiptsBoolExp): [Receipts!]
+  receiptsAggregate(filter_input: ReceiptsFilterInput): ReceiptsAggExp
+  receiptsById(id: Uuid!): Receipts
+  users(limit: Int, offset: Int, order_by: [UsersOrderByExp!], where: UsersBoolExp): [Users!]
+  usersAggregate(filter_input: UsersFilterInput): UsersAggExp
+  usersByEmail(email: String1!): Users
+  usersById(id: Uuid!): Users
+}
+
+type TextAggExp {
+  _count: Int64!
+  _count_distinct: Int64!
+  max: String1
+  min: String1
+}
+
+input TextBoolExp {
+  _and: [TextBoolExp!]
+  _eq: String1
+  _gt: String1
+  _gte: String1
+  _ilike: String1
+  _in: [String1!]
+  _iregex: String1
+  _is_null: Boolean
+  _like: String1
+  _lt: String1
+  _lte: String1
+  _neq: String1
+  _nilike: String1
+  _niregex: String1
+  _nlike: String1
+  _not: TextBoolExp
+  _nregex: String1
+  _or: [TextBoolExp!]
+  _regex: String1
+  starts_with: String1
+  ts_match_tt: String1
+}
+
+scalar Timestamptz
+
+type TimestamptzAggExp {
+  _count: Int64!
+  _count_distinct: Int64!
+  max: Timestamptz
+  min: Timestamptz
+}
+
+input TimestamptzBoolExp {
+  _and: [TimestamptzBoolExp!]
+  _eq: Timestamptz
+  _gt: Timestamptz
+  _gte: Timestamptz
+  _in: [Timestamptz!]
+  _is_null: Boolean
+  _lt: Timestamptz
+  _lte: Timestamptz
+  _neq: Timestamptz
+  _not: TimestamptzBoolExp
+  _or: [TimestamptzBoolExp!]
+}
+
+"""Update the 'created_at' column in the 'companies' collection"""
+input UpdateColumnCompaniesCreatedAtInput {
+  """Set the column to this value"""
+  set: Timestamptz
+}
+
+"""Update the 'id' column in the 'companies' collection"""
+input UpdateColumnCompaniesIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""Update the 'name' column in the 'companies' collection"""
+input UpdateColumnCompaniesNameInput {
+  """Set the column to this value"""
+  set: String1!
+}
+
+"""Update the 'category' column in the 'receipt_items' collection"""
+input UpdateColumnReceiptItemsCategoryInput {
+  """Set the column to this value"""
+  set: String1
+}
+
+"""Update the 'created_at' column in the 'receipt_items' collection"""
+input UpdateColumnReceiptItemsCreatedAtInput {
+  """Set the column to this value"""
+  set: Timestamptz
+}
+
+"""Update the 'description' column in the 'receipt_items' collection"""
+input UpdateColumnReceiptItemsDescriptionInput {
+  """Set the column to this value"""
+  set: String1!
+}
+
+"""Update the 'id' column in the 'receipt_items' collection"""
+input UpdateColumnReceiptItemsIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""Update the 'is_price_anomaly' column in the 'receipt_items' collection"""
+input UpdateColumnReceiptItemsIsPriceAnomalyInput {
+  """Set the column to this value"""
+  set: Boolean1
+}
+
+"""Update the 'quantity' column in the 'receipt_items' collection"""
+input UpdateColumnReceiptItemsQuantityInput {
+  """Set the column to this value"""
+  set: Bigdecimal
+}
+
+"""Update the 'receipt_id' column in the 'receipt_items' collection"""
+input UpdateColumnReceiptItemsReceiptIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""Update the 'total_price' column in the 'receipt_items' collection"""
+input UpdateColumnReceiptItemsTotalPriceInput {
+  """Set the column to this value"""
+  set: Bigdecimal!
+}
+
+"""Update the 'unit_price' column in the 'receipt_items' collection"""
+input UpdateColumnReceiptItemsUnitPriceInput {
+  """Set the column to this value"""
+  set: Bigdecimal!
+}
+
+"""Update the 'company_id' column in the 'receipts' collection"""
+input UpdateColumnReceiptsCompanyIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""Update the 'created_at' column in the 'receipts' collection"""
+input UpdateColumnReceiptsCreatedAtInput {
+  """Set the column to this value"""
+  set: Timestamptz
+}
+
+"""Update the 'id' column in the 'receipts' collection"""
+input UpdateColumnReceiptsIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""Update the 'image_url' column in the 'receipts' collection"""
+input UpdateColumnReceiptsImageUrlInput {
+  """Set the column to this value"""
+  set: String1
+}
+
+"""Update the 'receipt_date' column in the 'receipts' collection"""
+input UpdateColumnReceiptsReceiptDateInput {
+  """Set the column to this value"""
+  set: Date!
+}
+
+"""Update the 'status' column in the 'receipts' collection"""
+input UpdateColumnReceiptsStatusInput {
+  """Set the column to this value"""
+  set: String1
+}
+
+"""Update the 'total_amount' column in the 'receipts' collection"""
+input UpdateColumnReceiptsTotalAmountInput {
+  """Set the column to this value"""
+  set: Bigdecimal!
+}
+
+"""Update the 'user_id' column in the 'receipts' collection"""
+input UpdateColumnReceiptsUserIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""Update the 'vendor_name' column in the 'receipts' collection"""
+input UpdateColumnReceiptsVendorNameInput {
+  """Set the column to this value"""
+  set: String1!
+}
+
+"""Update the 'company_id' column in the 'users' collection"""
+input UpdateColumnUsersCompanyIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""Update the 'created_at' column in the 'users' collection"""
+input UpdateColumnUsersCreatedAtInput {
+  """Set the column to this value"""
+  set: Timestamptz
+}
+
+"""Update the 'email' column in the 'users' collection"""
+input UpdateColumnUsersEmailInput {
+  """Set the column to this value"""
+  set: String1!
+}
+
+"""Update the 'full_name' column in the 'users' collection"""
+input UpdateColumnUsersFullNameInput {
+  """Set the column to this value"""
+  set: String1!
+}
+
+"""Update the 'id' column in the 'users' collection"""
+input UpdateColumnUsersIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""Update the 'role' column in the 'users' collection"""
+input UpdateColumnUsersRoleInput {
+  """Set the column to this value"""
+  set: Enum!
+}
+
+"""Responses from the 'update_companies_by_id' procedure"""
+type UpdateCompaniesByIdResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Companies!]!
+}
+
+"""Update the columns of the 'companies' collection"""
+input UpdateCompaniesByIdUpdateColumnsInput {
+  """Update the 'created_at' column in the 'companies' collection."""
+  createdAt: UpdateColumnCompaniesCreatedAtInput
+  """Update the 'id' column in the 'companies' collection."""
+  id: UpdateColumnCompaniesIdInput
+  """Update the 'name' column in the 'companies' collection."""
+  name: UpdateColumnCompaniesNameInput
+}
+
+"""Responses from the 'update_receipt_items_by_id' procedure"""
+type UpdateReceiptItemsByIdResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [ReceiptItems!]!
+}
+
+"""Update the columns of the 'receipt_items' collection"""
+input UpdateReceiptItemsByIdUpdateColumnsInput {
+  """Update the 'category' column in the 'receipt_items' collection."""
+  category: UpdateColumnReceiptItemsCategoryInput
+  """Update the 'created_at' column in the 'receipt_items' collection."""
+  createdAt: UpdateColumnReceiptItemsCreatedAtInput
+  """Update the 'description' column in the 'receipt_items' collection."""
+  description: UpdateColumnReceiptItemsDescriptionInput
+  """Update the 'id' column in the 'receipt_items' collection."""
+  id: UpdateColumnReceiptItemsIdInput
+  """
+  Update the 'is_price_anomaly' column in the 'receipt_items' collection.
+  """
+  isPriceAnomaly: UpdateColumnReceiptItemsIsPriceAnomalyInput
+  """Update the 'quantity' column in the 'receipt_items' collection."""
+  quantity: UpdateColumnReceiptItemsQuantityInput
+  """Update the 'receipt_id' column in the 'receipt_items' collection."""
+  receiptId: UpdateColumnReceiptItemsReceiptIdInput
+  """Update the 'total_price' column in the 'receipt_items' collection."""
+  totalPrice: UpdateColumnReceiptItemsTotalPriceInput
+  """Update the 'unit_price' column in the 'receipt_items' collection."""
+  unitPrice: UpdateColumnReceiptItemsUnitPriceInput
+}
+
+"""Responses from the 'update_receipts_by_id' procedure"""
+type UpdateReceiptsByIdResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Receipts!]!
+}
+
+"""Update the columns of the 'receipts' collection"""
+input UpdateReceiptsByIdUpdateColumnsInput {
+  """Update the 'company_id' column in the 'receipts' collection."""
+  companyId: UpdateColumnReceiptsCompanyIdInput
+  """Update the 'created_at' column in the 'receipts' collection."""
+  createdAt: UpdateColumnReceiptsCreatedAtInput
+  """Update the 'id' column in the 'receipts' collection."""
+  id: UpdateColumnReceiptsIdInput
+  """Update the 'image_url' column in the 'receipts' collection."""
+  imageUrl: UpdateColumnReceiptsImageUrlInput
+  """Update the 'receipt_date' column in the 'receipts' collection."""
+  receiptDate: UpdateColumnReceiptsReceiptDateInput
+  """Update the 'status' column in the 'receipts' collection."""
+  status: UpdateColumnReceiptsStatusInput
+  """Update the 'total_amount' column in the 'receipts' collection."""
+  totalAmount: UpdateColumnReceiptsTotalAmountInput
+  """Update the 'user_id' column in the 'receipts' collection."""
+  userId: UpdateColumnReceiptsUserIdInput
+  """Update the 'vendor_name' column in the 'receipts' collection."""
+  vendorName: UpdateColumnReceiptsVendorNameInput
+}
+
+"""Responses from the 'update_users_by_email' procedure"""
+type UpdateUsersByEmailResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Users!]!
+}
+
+"""Update the columns of the 'users' collection"""
+input UpdateUsersByEmailUpdateColumnsInput {
+  """Update the 'company_id' column in the 'users' collection."""
+  companyId: UpdateColumnUsersCompanyIdInput
+  """Update the 'created_at' column in the 'users' collection."""
+  createdAt: UpdateColumnUsersCreatedAtInput
+  """Update the 'email' column in the 'users' collection."""
+  email: UpdateColumnUsersEmailInput
+  """Update the 'full_name' column in the 'users' collection."""
+  fullName: UpdateColumnUsersFullNameInput
+  """Update the 'id' column in the 'users' collection."""
+  id: UpdateColumnUsersIdInput
+  """Update the 'role' column in the 'users' collection."""
+  role: UpdateColumnUsersRoleInput
+}
+
+"""Responses from the 'update_users_by_id' procedure"""
+type UpdateUsersByIdResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [Users!]!
+}
+
+"""Update the columns of the 'users' collection"""
+input UpdateUsersByIdUpdateColumnsInput {
+  """Update the 'company_id' column in the 'users' collection."""
+  companyId: UpdateColumnUsersCompanyIdInput
+  """Update the 'created_at' column in the 'users' collection."""
+  createdAt: UpdateColumnUsersCreatedAtInput
+  """Update the 'email' column in the 'users' collection."""
+  email: UpdateColumnUsersEmailInput
+  """Update the 'full_name' column in the 'users' collection."""
+  fullName: UpdateColumnUsersFullNameInput
+  """Update the 'id' column in the 'users' collection."""
+  id: UpdateColumnUsersIdInput
+  """Update the 'role' column in the 'users' collection."""
+  role: UpdateColumnUsersRoleInput
+}
+
+type UserRoleAggExp {
+  _count: Int64!
+  _count_distinct: Int64!
+  max: Enum
+  min: Enum
+}
+
+input UserRoleBoolExp {
+  _and: [UserRoleBoolExp!]
+  _eq: Enum
+  _gt: Enum
+  _gte: Enum
+  _in: [Enum!]
+  _is_null: Boolean
+  _lt: Enum
+  _lte: Enum
+  _neq: Enum
+  _not: UserRoleBoolExp
+  _or: [UserRoleBoolExp!]
+}
+
+type Users {
+  company: Companies
+  companyId: Uuid!
+  createdAt: Timestamptz
+  email: String1!
+  fullName: String1!
+  id: Uuid!
+  receipts(limit: Int, offset: Int, order_by: [ReceiptsOrderByExp!], where: ReceiptsBoolExp): [Receipts!]
+  receiptsAggregate(filter_input: ReceiptsFilterInput): ReceiptsAggExp!
+  role: Enum!
+}
+
+type UsersAggExp {
+  _count: Int64!
+  companyId: UuidAggExp!
+  createdAt: TimestamptzAggExp!
+  email: TextAggExp!
+  fullName: TextAggExp!
+  id: UuidAggExp!
+  role: UserRoleAggExp!
+}
+
+input UsersBoolExp {
+  _and: [UsersBoolExp!]
+  _not: UsersBoolExp
+  _or: [UsersBoolExp!]
+  company: CompaniesBoolExp
+  companyId: UuidBoolExp
+  createdAt: TimestamptzBoolExp
+  email: TextBoolExp
+  fullName: TextBoolExp
+  id: UuidBoolExp
+  receipts: ReceiptsBoolExp
+  role: UserRoleBoolExp
+}
+
+input UsersFilterInput {
+  limit: Int
+  offset: Int
+  order_by: [UsersOrderByExp!]
+  where: UsersBoolExp
+}
+
+input UsersOrderByExp {
+  company: CompaniesOrderByExp
+  companyId: OrderBy
+  createdAt: OrderBy
+  email: OrderBy
+  fullName: OrderBy
+  id: OrderBy
+  role: OrderBy
+}
+
+scalar Uuid
+
+type UuidAggExp {
+  _count: Int64!
+  _count_distinct: Int64!
+}
+
+input UuidBoolExp {
+  _and: [UuidBoolExp!]
+  _eq: Uuid
+  _gt: Uuid
+  _gte: Uuid
+  _in: [Uuid!]
+  _is_null: Boolean
+  _lt: Uuid
+  _lte: Uuid
+  _neq: Uuid
+  _not: UuidBoolExp
+  _or: [UuidBoolExp!]
+}

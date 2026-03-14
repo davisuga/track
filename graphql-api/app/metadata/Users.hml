@@ -1,0 +1,229 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Users
+  fields:
+    - name: companyId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamptz
+    - name: email
+      type: String_1!
+    - name: fullName
+      type: String_1!
+    - name: id
+      type: Uuid!
+    - name: role
+      type: Enum!
+  graphql:
+    typeName: Users
+    inputTypeName: UsersInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: users
+      fieldMapping:
+        companyId:
+          column:
+            name: company_id
+        createdAt:
+          column:
+            name: created_at
+        email:
+          column:
+            name: email
+        fullName:
+          column:
+            name: full_name
+        id:
+          column:
+            name: id
+        role:
+          column:
+            name: role
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Users
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - companyId
+          - createdAt
+          - email
+          - fullName
+          - id
+          - role
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: UsersBoolExp
+  operand:
+    object:
+      type: Users
+      comparableFields:
+        - fieldName: companyId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: email
+          booleanExpressionType: TextBoolExp
+        - fieldName: fullName
+          booleanExpressionType: TextBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: role
+          booleanExpressionType: UserRoleBoolExp
+      comparableRelationships:
+        - relationshipName: receipts
+        - relationshipName: company
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: UsersBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: UsersAggExp
+  operand:
+    object:
+      aggregatedType: Users
+      aggregatableFields:
+        - fieldName: companyId
+          aggregateExpression: UuidAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: email
+          aggregateExpression: TextAggExp
+        - fieldName: fullName
+          aggregateExpression: TextAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: role
+          aggregateExpression: UserRoleAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: UsersAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: UsersOrderByExp
+  operand:
+    object:
+      orderedType: Users
+      orderableFields:
+        - fieldName: companyId
+          orderByExpression: UuidOrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: email
+          orderByExpression: String1OrderByExp
+        - fieldName: fullName
+          orderByExpression: String1OrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: role
+          orderByExpression: EnumOrderByExp
+      orderableRelationships:
+        - relationshipName: company
+  graphql:
+    expressionTypeName: UsersOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: Users
+  objectType: Users
+  source:
+    dataConnectorName: my_pg
+    collection: users
+  filterExpressionType: UsersBoolExp
+  aggregateExpression: UsersAggExp
+  orderByExpression: UsersOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: users
+      subscription:
+        rootField: users
+    selectUniques:
+      - queryRootField: usersByEmail
+        uniqueIdentifier:
+          - email
+        subscription:
+          rootField: usersByEmail
+      - queryRootField: usersById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: usersById
+    filterInputTypeName: UsersFilterInput
+    aggregate:
+      queryRootField: usersAggregate
+      subscription:
+        rootField: usersAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Users
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: receipts
+  sourceType: Users
+  target:
+    model:
+      name: Receipts
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: ReceiptsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: userId
+  graphql:
+    aggregateFieldName: receiptsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: company
+  sourceType: Users
+  target:
+    model:
+      name: Companies
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: companyId
+      target:
+        modelField:
+          - fieldName: id
+

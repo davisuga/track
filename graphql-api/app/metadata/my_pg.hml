@@ -1,0 +1,1742 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: my_pg
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: APP_MY_PG_READ_URL
+      write:
+        valueFromEnv: APP_MY_PG_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: APP_MY_PG_AUTHORIZATION_HEADER
+  schema:
+    version: v0.2
+    schema:
+      capabilities:
+        query:
+          aggregates:
+            count_scalar_type: int8
+      collections:
+        - arguments: {}
+          name: companies
+          type: companies
+          uniqueness_constraints:
+            companies_pkey:
+              unique_columns:
+                - id
+        - arguments: {}
+          name: receipt_items
+          type: receipt_items
+          uniqueness_constraints:
+            receipt_items_pkey:
+              unique_columns:
+                - id
+        - arguments: {}
+          name: receipts
+          type: receipts
+          uniqueness_constraints:
+            receipts_pkey:
+              unique_columns:
+                - id
+        - arguments: {}
+          name: users
+          type: users
+          uniqueness_constraints:
+            users_email_key:
+              unique_columns:
+                - email
+            users_pkey:
+              unique_columns:
+                - id
+      functions: []
+      object_types:
+        companies:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            name:
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        delete_companies_by_id_response:
+          description: Responses from the 'delete_companies_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: companies
+                  type: named
+                type: array
+          foreign_keys: {}
+        delete_receipt_items_by_id_response:
+          description: Responses from the 'delete_receipt_items_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: receipt_items
+                  type: named
+                type: array
+          foreign_keys: {}
+        delete_receipts_by_id_response:
+          description: Responses from the 'delete_receipts_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: receipts
+                  type: named
+                type: array
+          foreign_keys: {}
+        delete_users_by_email_response:
+          description: Responses from the 'delete_users_by_email' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: users
+                  type: named
+                type: array
+          foreign_keys: {}
+        delete_users_by_id_response:
+          description: Responses from the 'delete_users_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: users
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_companies_object:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            name:
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        insert_companies_response:
+          description: Responses from the 'insert_companies' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: companies
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_receipt_items_object:
+          fields:
+            category:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            description:
+              type:
+                name: text
+                type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            is_price_anomaly:
+              type:
+                type: nullable
+                underlying_type:
+                  name: bool
+                  type: named
+            quantity:
+              type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+            receipt_id:
+              type:
+                name: uuid
+                type: named
+            total_price:
+              type:
+                name: numeric
+                type: named
+            unit_price:
+              type:
+                name: numeric
+                type: named
+          foreign_keys: {}
+        insert_receipt_items_response:
+          description: Responses from the 'insert_receipt_items' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: receipt_items
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_receipts_object:
+          fields:
+            company_id:
+              type:
+                name: uuid
+                type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            image_url:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            receipt_date:
+              type:
+                name: date
+                type: named
+            status:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            total_amount:
+              type:
+                name: numeric
+                type: named
+            user_id:
+              type:
+                name: uuid
+                type: named
+            vendor_name:
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        insert_receipts_response:
+          description: Responses from the 'insert_receipts' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: receipts
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_users_object:
+          fields:
+            company_id:
+              type:
+                name: uuid
+                type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            email:
+              type:
+                name: text
+                type: named
+            full_name:
+              type:
+                name: text
+                type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            role:
+              type:
+                name: user_role
+                type: named
+          foreign_keys: {}
+        insert_users_response:
+          description: Responses from the 'insert_users' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: users
+                  type: named
+                type: array
+          foreign_keys: {}
+        receipt_items:
+          fields:
+            category:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            description:
+              type:
+                name: text
+                type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            is_price_anomaly:
+              type:
+                type: nullable
+                underlying_type:
+                  name: bool
+                  type: named
+            quantity:
+              type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+            receipt_id:
+              type:
+                name: uuid
+                type: named
+            total_price:
+              type:
+                name: numeric
+                type: named
+            unit_price:
+              type:
+                name: numeric
+                type: named
+          foreign_keys:
+            receipt_items_receipt_id_fkey:
+              column_mapping:
+                receipt_id:
+                  - id
+              foreign_collection: receipts
+        receipts:
+          fields:
+            company_id:
+              type:
+                name: uuid
+                type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            image_url:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            receipt_date:
+              type:
+                name: date
+                type: named
+            status:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            total_amount:
+              type:
+                name: numeric
+                type: named
+            user_id:
+              type:
+                name: uuid
+                type: named
+            vendor_name:
+              type:
+                name: text
+                type: named
+          foreign_keys:
+            receipts_company_id_fkey:
+              column_mapping:
+                company_id:
+                  - id
+              foreign_collection: companies
+            receipts_user_id_fkey:
+              column_mapping:
+                user_id:
+                  - id
+              foreign_collection: users
+        update_column_companies_created_at:
+          description: Update the 'created_at' column in the 'companies' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        update_column_companies_id:
+          description: Update the 'id' column in the 'companies' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_companies_name:
+          description: Update the 'name' column in the 'companies' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_receipt_items_category:
+          description: Update the 'category' column in the 'receipt_items' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+          foreign_keys: {}
+        update_column_receipt_items_created_at:
+          description: Update the 'created_at' column in the 'receipt_items' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        update_column_receipt_items_description:
+          description: Update the 'description' column in the 'receipt_items' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_receipt_items_id:
+          description: Update the 'id' column in the 'receipt_items' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_receipt_items_is_price_anomaly:
+          description: Update the 'is_price_anomaly' column in the 'receipt_items' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: bool
+                  type: named
+          foreign_keys: {}
+        update_column_receipt_items_quantity:
+          description: Update the 'quantity' column in the 'receipt_items' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+          foreign_keys: {}
+        update_column_receipt_items_receipt_id:
+          description: Update the 'receipt_id' column in the 'receipt_items' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_receipt_items_total_price:
+          description: Update the 'total_price' column in the 'receipt_items' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: numeric
+                type: named
+          foreign_keys: {}
+        update_column_receipt_items_unit_price:
+          description: Update the 'unit_price' column in the 'receipt_items' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: numeric
+                type: named
+          foreign_keys: {}
+        update_column_receipts_company_id:
+          description: Update the 'company_id' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_receipts_created_at:
+          description: Update the 'created_at' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        update_column_receipts_id:
+          description: Update the 'id' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_receipts_image_url:
+          description: Update the 'image_url' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+          foreign_keys: {}
+        update_column_receipts_receipt_date:
+          description: Update the 'receipt_date' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: date
+                type: named
+          foreign_keys: {}
+        update_column_receipts_status:
+          description: Update the 'status' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+          foreign_keys: {}
+        update_column_receipts_total_amount:
+          description: Update the 'total_amount' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: numeric
+                type: named
+          foreign_keys: {}
+        update_column_receipts_user_id:
+          description: Update the 'user_id' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_receipts_vendor_name:
+          description: Update the 'vendor_name' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_users_company_id:
+          description: Update the 'company_id' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_users_created_at:
+          description: Update the 'created_at' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        update_column_users_email:
+          description: Update the 'email' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_users_full_name:
+          description: Update the 'full_name' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_users_id:
+          description: Update the 'id' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_users_role:
+          description: Update the 'role' column in the 'users' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: user_role
+                type: named
+          foreign_keys: {}
+        update_companies_by_id_response:
+          description: Responses from the 'update_companies_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: companies
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_companies_by_id_update_columns:
+          description: Update the columns of the 'companies' collection
+          fields:
+            created_at:
+              description: Update the 'created_at' column in the 'companies' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_companies_created_at
+                  type: named
+            id:
+              description: Update the 'id' column in the 'companies' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_companies_id
+                  type: named
+            name:
+              description: Update the 'name' column in the 'companies' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_companies_name
+                  type: named
+          foreign_keys: {}
+        update_receipt_items_by_id_response:
+          description: Responses from the 'update_receipt_items_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: receipt_items
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_receipt_items_by_id_update_columns:
+          description: Update the columns of the 'receipt_items' collection
+          fields:
+            category:
+              description: Update the 'category' column in the 'receipt_items' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipt_items_category
+                  type: named
+            created_at:
+              description: Update the 'created_at' column in the 'receipt_items' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipt_items_created_at
+                  type: named
+            description:
+              description: Update the 'description' column in the 'receipt_items' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipt_items_description
+                  type: named
+            id:
+              description: Update the 'id' column in the 'receipt_items' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipt_items_id
+                  type: named
+            is_price_anomaly:
+              description: Update the 'is_price_anomaly' column in the 'receipt_items' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipt_items_is_price_anomaly
+                  type: named
+            quantity:
+              description: Update the 'quantity' column in the 'receipt_items' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipt_items_quantity
+                  type: named
+            receipt_id:
+              description: Update the 'receipt_id' column in the 'receipt_items' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipt_items_receipt_id
+                  type: named
+            total_price:
+              description: Update the 'total_price' column in the 'receipt_items' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipt_items_total_price
+                  type: named
+            unit_price:
+              description: Update the 'unit_price' column in the 'receipt_items' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipt_items_unit_price
+                  type: named
+          foreign_keys: {}
+        update_receipts_by_id_response:
+          description: Responses from the 'update_receipts_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: receipts
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_receipts_by_id_update_columns:
+          description: Update the columns of the 'receipts' collection
+          fields:
+            company_id:
+              description: Update the 'company_id' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_company_id
+                  type: named
+            created_at:
+              description: Update the 'created_at' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_created_at
+                  type: named
+            id:
+              description: Update the 'id' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_id
+                  type: named
+            image_url:
+              description: Update the 'image_url' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_image_url
+                  type: named
+            receipt_date:
+              description: Update the 'receipt_date' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_receipt_date
+                  type: named
+            status:
+              description: Update the 'status' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_status
+                  type: named
+            total_amount:
+              description: Update the 'total_amount' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_total_amount
+                  type: named
+            user_id:
+              description: Update the 'user_id' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_user_id
+                  type: named
+            vendor_name:
+              description: Update the 'vendor_name' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_vendor_name
+                  type: named
+          foreign_keys: {}
+        update_users_by_email_response:
+          description: Responses from the 'update_users_by_email' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: users
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_users_by_email_update_columns:
+          description: Update the columns of the 'users' collection
+          fields:
+            company_id:
+              description: Update the 'company_id' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_company_id
+                  type: named
+            created_at:
+              description: Update the 'created_at' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_created_at
+                  type: named
+            email:
+              description: Update the 'email' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_email
+                  type: named
+            full_name:
+              description: Update the 'full_name' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_full_name
+                  type: named
+            id:
+              description: Update the 'id' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_id
+                  type: named
+            role:
+              description: Update the 'role' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_role
+                  type: named
+          foreign_keys: {}
+        update_users_by_id_response:
+          description: Responses from the 'update_users_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: users
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_users_by_id_update_columns:
+          description: Update the columns of the 'users' collection
+          fields:
+            company_id:
+              description: Update the 'company_id' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_company_id
+                  type: named
+            created_at:
+              description: Update the 'created_at' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_created_at
+                  type: named
+            email:
+              description: Update the 'email' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_email
+                  type: named
+            full_name:
+              description: Update the 'full_name' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_full_name
+                  type: named
+            id:
+              description: Update the 'id' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_id
+                  type: named
+            role:
+              description: Update the 'role' column in the 'users' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_users_role
+                  type: named
+          foreign_keys: {}
+        users:
+          fields:
+            company_id:
+              type:
+                name: uuid
+                type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            email:
+              type:
+                name: text
+                type: named
+            full_name:
+              type:
+                name: text
+                type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            role:
+              type:
+                name: user_role
+                type: named
+          foreign_keys:
+            users_company_id_fkey:
+              column_mapping:
+                company_id:
+                  - id
+              foreign_collection: companies
+      procedures:
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'companies' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: companies
+                  type: predicate
+          description: Delete any row on the 'companies' collection using the 'id' key
+          name: delete_companies_by_id
+          result_type:
+            name: delete_companies_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'receipt_items' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: receipt_items
+                  type: predicate
+          description: Delete any row on the 'receipt_items' collection using the 'id' key
+          name: delete_receipt_items_by_id
+          result_type:
+            name: delete_receipt_items_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'receipts' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: receipts
+                  type: predicate
+          description: Delete any row on the 'receipts' collection using the 'id' key
+          name: delete_receipts_by_id
+          result_type:
+            name: delete_receipts_by_id_response
+            type: named
+        - arguments:
+            key_email:
+              type:
+                name: text
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: users
+                  type: predicate
+          description: Delete any row on the 'users' collection using the 'email' key
+          name: delete_users_by_email
+          result_type:
+            name: delete_users_by_email_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: users
+                  type: predicate
+          description: Delete any row on the 'users' collection using the 'id' key
+          name: delete_users_by_id
+          result_type:
+            name: delete_users_by_id_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_companies_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'companies' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: companies
+                  type: predicate
+          description: Insert into the companies table
+          name: insert_companies
+          result_type:
+            name: insert_companies_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_receipt_items_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'receipt_items' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: receipt_items
+                  type: predicate
+          description: Insert into the receipt_items table
+          name: insert_receipt_items
+          result_type:
+            name: insert_receipt_items_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_receipts_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'receipts' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: receipts
+                  type: predicate
+          description: Insert into the receipts table
+          name: insert_receipts
+          result_type:
+            name: insert_receipts_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
+                  name: insert_users_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: users
+                  type: predicate
+          description: Insert into the users table
+          name: insert_users
+          result_type:
+            name: insert_users_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'companies' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: companies
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'companies' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: companies
+                  type: predicate
+            update_columns:
+              type:
+                name: update_companies_by_id_update_columns
+                type: named
+          description: Update any row on the 'companies' collection using the 'id' key
+          name: update_companies_by_id
+          result_type:
+            name: update_companies_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'receipt_items' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: receipt_items
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'receipt_items' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: receipt_items
+                  type: predicate
+            update_columns:
+              type:
+                name: update_receipt_items_by_id_update_columns
+                type: named
+          description: Update any row on the 'receipt_items' collection using the 'id' key
+          name: update_receipt_items_by_id
+          result_type:
+            name: update_receipt_items_by_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'receipts' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: receipts
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'receipts' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: receipts
+                  type: predicate
+            update_columns:
+              type:
+                name: update_receipts_by_id_update_columns
+                type: named
+          description: Update any row on the 'receipts' collection using the 'id' key
+          name: update_receipts_by_id
+          result_type:
+            name: update_receipts_by_id_response
+            type: named
+        - arguments:
+            key_email:
+              type:
+                name: text
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: users
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: users
+                  type: predicate
+            update_columns:
+              type:
+                name: update_users_by_email_update_columns
+                type: named
+          description: Update any row on the 'users' collection using the 'email' key
+          name: update_users_by_email
+          result_type:
+            name: update_users_by_email_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: users
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'users' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: users
+                  type: predicate
+            update_columns:
+              type:
+                name: update_users_by_id_update_columns
+                type: named
+          description: Update any row on the 'users' collection using the 'id' key
+          name: update_users_by_id
+          result_type:
+            name: update_users_by_id_response
+            type: named
+      request_arguments: null
+      scalar_types:
+        bool:
+          aggregate_functions:
+            bool_and:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: bool
+                  type: named
+              type: custom
+            bool_or:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: bool
+                  type: named
+              type: custom
+            every:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: bool
+                  type: named
+              type: custom
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: bool
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: boolean
+        date:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: date
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: date
+        int4:
+          aggregate_functions: {}
+          comparison_operators: {}
+          extraction_functions: {}
+          representation:
+            type: int32
+        int8:
+          aggregate_functions: {}
+          comparison_operators: {}
+          extraction_functions: {}
+          representation:
+            type: int64
+        numeric:
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            max:
+              type: max
+            min:
+              type: min
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            sum:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  name: numeric
+                  type: named
+              type: custom
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: numeric
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: bigdecimal
+        text:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _ilike:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _in:
+              type: in
+            _iregex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _like:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _nilike:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _niregex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _nlike:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _nregex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            _regex:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            starts_with:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+            ts_match_tt:
+              argument_type:
+                name: text
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: string
+        timestamptz:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: timestamptz
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: timestamptz
+        user_role:
+          aggregate_functions:
+            max:
+              type: max
+            min:
+              type: min
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: user_role
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            one_of:
+              - admin
+              - field_rep
+            type: enum
+        uuid:
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: greater_than
+            _gte:
+              type: greater_than_or_equal
+            _in:
+              type: in
+            _lt:
+              type: less_than
+            _lte:
+              type: less_than_or_equal
+            _neq:
+              argument_type:
+                name: uuid
+                type: named
+              type: custom
+          extraction_functions: {}
+          representation:
+            type: uuid
+    capabilities:
+      capabilities:
+        mutation:
+          explain: {}
+          transactional: {}
+        query:
+          aggregates: {}
+          exists:
+            nested_collections: {}
+          explain: {}
+          nested_fields:
+            aggregates: {}
+            filter_by: {}
+            order_by: {}
+          variables: {}
+        relationships:
+          nested:
+            array: {}
+          order_by_aggregate: {}
+          relation_comparisons: {}
+      version: 0.2.4

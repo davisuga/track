@@ -1,0 +1,280 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Receipts
+  fields:
+    - name: companyId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: imageUrl
+      type: String_1
+    - name: receiptDate
+      type: Date!
+    - name: status
+      type: String_1
+    - name: totalAmount
+      type: Bigdecimal!
+    - name: userId
+      type: Uuid!
+    - name: vendorName
+      type: String_1!
+  graphql:
+    typeName: Receipts
+    inputTypeName: ReceiptsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: receipts
+      fieldMapping:
+        companyId:
+          column:
+            name: company_id
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        imageUrl:
+          column:
+            name: image_url
+        receiptDate:
+          column:
+            name: receipt_date
+        status:
+          column:
+            name: status
+        totalAmount:
+          column:
+            name: total_amount
+        userId:
+          column:
+            name: user_id
+        vendorName:
+          column:
+            name: vendor_name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Receipts
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - companyId
+          - createdAt
+          - id
+          - imageUrl
+          - receiptDate
+          - status
+          - totalAmount
+          - userId
+          - vendorName
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ReceiptsBoolExp
+  operand:
+    object:
+      type: Receipts
+      comparableFields:
+        - fieldName: companyId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: imageUrl
+          booleanExpressionType: TextBoolExp
+        - fieldName: receiptDate
+          booleanExpressionType: DateBoolExp
+        - fieldName: status
+          booleanExpressionType: TextBoolExp
+        - fieldName: totalAmount
+          booleanExpressionType: NumericBoolExp
+        - fieldName: userId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: vendorName
+          booleanExpressionType: TextBoolExp
+      comparableRelationships:
+        - relationshipName: receiptItems
+        - relationshipName: company
+        - relationshipName: user
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: ReceiptsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ReceiptsAggExp
+  operand:
+    object:
+      aggregatedType: Receipts
+      aggregatableFields:
+        - fieldName: companyId
+          aggregateExpression: UuidAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: imageUrl
+          aggregateExpression: TextAggExp
+        - fieldName: receiptDate
+          aggregateExpression: DateAggExp
+        - fieldName: status
+          aggregateExpression: TextAggExp
+        - fieldName: totalAmount
+          aggregateExpression: NumericAggExp
+        - fieldName: userId
+          aggregateExpression: UuidAggExp
+        - fieldName: vendorName
+          aggregateExpression: TextAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: ReceiptsAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: ReceiptsOrderByExp
+  operand:
+    object:
+      orderedType: Receipts
+      orderableFields:
+        - fieldName: companyId
+          orderByExpression: UuidOrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: imageUrl
+          orderByExpression: String1OrderByExp
+        - fieldName: receiptDate
+          orderByExpression: DateOrderByExp
+        - fieldName: status
+          orderByExpression: String1OrderByExp
+        - fieldName: totalAmount
+          orderByExpression: BigdecimalOrderByExp
+        - fieldName: userId
+          orderByExpression: UuidOrderByExp
+        - fieldName: vendorName
+          orderByExpression: String1OrderByExp
+      orderableRelationships:
+        - relationshipName: company
+        - relationshipName: user
+  graphql:
+    expressionTypeName: ReceiptsOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: Receipts
+  objectType: Receipts
+  source:
+    dataConnectorName: my_pg
+    collection: receipts
+  filterExpressionType: ReceiptsBoolExp
+  aggregateExpression: ReceiptsAggExp
+  orderByExpression: ReceiptsOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: receipts
+      subscription:
+        rootField: receipts
+    selectUniques:
+      - queryRootField: receiptsById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: receiptsById
+    filterInputTypeName: ReceiptsFilterInput
+    aggregate:
+      queryRootField: receiptsAggregate
+      subscription:
+        rootField: receiptsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Receipts
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: receiptItems
+  sourceType: Receipts
+  target:
+    model:
+      name: ReceiptItems
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: ReceiptItemsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: id
+      target:
+        modelField:
+          - fieldName: receiptId
+  graphql:
+    aggregateFieldName: receiptItemsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: company
+  sourceType: Receipts
+  target:
+    model:
+      name: Companies
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: companyId
+      target:
+        modelField:
+          - fieldName: id
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: user
+  sourceType: Receipts
+  target:
+    model:
+      name: Users
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: userId
+      target:
+        modelField:
+          - fieldName: id
+
