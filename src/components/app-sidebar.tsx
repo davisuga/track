@@ -1,7 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router"
 import {
   LayoutDashboard,
-  Receipt,
   ReceiptText,
   ScanLine,
   Users,
@@ -13,7 +12,6 @@ import {
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
@@ -63,32 +61,28 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon" variant="inset">
-      <SidebarHeader className="p-3">
-        <div className="rounded-[28px] border border-sidebar-border/80 bg-sidebar-accent px-4 py-4 shadow-soft">
-          <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-accent-fg">
-              <Receipt size={20} />
-            </div>
-            <div className="min-w-0 group-data-[collapsible=icon]:hidden">
-              <p className="font-display text-lg font-bold tracking-tight">
-                ReceiptIQ
-              </p>
-              <p className="text-sm text-text-secondary">
-                {t("app.sidebar.description")}
-              </p>
-            </div>
+      <SidebarHeader className=" pb-3">
+        <div className=" px-2 py-4">
+
+
+          <div className="min-w-0 group-data-[collapsible=icon]:hidden">
+            <p className="font-display text-4xl font-bold tracking-tight">
+              Track
+            </p>
+
+
           </div>
         </div>
       </SidebarHeader>
 
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>{t("app.sidebar.navigation")}</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="gap-1.5">
               {navigationItems.map((item) => (
                 <SidebarMenuItem key={item.to}>
                   <SidebarMenuButton
+                    className="h-12 rounded-2xl px-4 text-base font-medium text-sidebar-foreground/90 hover:bg-white/8 hover:text-white data-active:bg-white data-active:text-[#04342C] data-active:font-semibold data-active:shadow-[0_10px_24px_rgba(0,0,0,0.16)] [&_svg]:size-5"
                     isActive={item.isActive}
                     render={
                       <Link

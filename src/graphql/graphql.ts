@@ -3055,6 +3055,13 @@ export type DeleteScanReceiptItemMutationVariables = Exact<{
 
 export type DeleteScanReceiptItemMutation = { __typename?: 'Mutation', deleteReceiptItemsById: { __typename?: 'DeleteReceiptItemsByIdResponse', affectedRows: any } };
 
+export type ScanReceiptDraftQueryVariables = Exact<{
+  id: Scalars['Uuid']['input'];
+}>;
+
+
+export type ScanReceiptDraftQuery = { __typename?: 'Query', receiptsById?: { __typename?: 'Receipts', id: any, imageUrl?: any | null, receiptDate: any, status?: any | null, totalAmount: any, userId: any, vendorName: any, vendorTaxId?: any | null, vendorTaxIdValid: any, user?: { __typename?: 'Users', fullName: any } | null, receiptItems?: Array<{ __typename?: 'ReceiptItems', id: any, category?: any | null, description: any, normalizedDescription: any, rawDescription: any, quantity?: any | null, unitPrice: any, totalPrice: any }> | null } | null };
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -3160,3 +3167,31 @@ export const DeleteScanReceiptItemDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<DeleteScanReceiptItemMutation, DeleteScanReceiptItemMutationVariables>;
+export const ScanReceiptDraftDocument = new TypedDocumentString(`
+    query ScanReceiptDraft($id: Uuid!) {
+  receiptsById(id: $id) {
+    id
+    imageUrl
+    receiptDate
+    status
+    totalAmount
+    userId
+    vendorName
+    vendorTaxId
+    vendorTaxIdValid
+    user {
+      fullName
+    }
+    receiptItems(order_by: [{totalPrice: Desc}, {normalizedDescription: Asc}]) {
+      id
+      category
+      description
+      normalizedDescription
+      rawDescription
+      quantity
+      unitPrice
+      totalPrice
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<ScanReceiptDraftQuery, ScanReceiptDraftQueryVariables>;

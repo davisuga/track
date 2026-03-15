@@ -16,6 +16,7 @@ import {
 } from "@/features/scan/types"
 import {
   createPresignedReceiptUploadUrl,
+  createSignedReceiptReadUrl,
   downloadReceiptObject,
   getStoredImageReference,
 } from "@/lib/r2"
@@ -148,6 +149,37 @@ const ReceiptParsingSubscription = `
   ReceiptParsingSubscriptionResult,
   { id: string }
 >
+
+const ScanReceiptDraftQuery = graphql(`
+  query ScanReceiptDraft($id: Uuid!) {
+    receiptsById(id: $id) {
+      id
+      imageUrl
+      receiptDate
+      status
+      totalAmount
+      userId
+      vendorName
+      vendorTaxId
+      vendorTaxIdValid
+      user {
+        fullName
+      }
+      receiptItems(
+        order_by: [{ totalPrice: Desc }, { normalizedDescription: Asc }]
+      ) {
+        id
+        category
+        description
+        normalizedDescription
+        rawDescription
+        quantity
+        unitPrice
+        totalPrice
+      }
+    }
+  }
+`)
 
 const draftReceiptPlaceholderName = "Processando recibo"
 const processingReceiptStatus = "processing"
@@ -629,6 +661,59 @@ type ReceiptParsingSubscriptionResult = {
   } | null
 }
 
+type ScanReceiptDraftQueryResult = {
+  receiptsById?: {
+    id: string
+    imageUrl?: string | null
+    receiptDate: string
+    status?: string | null
+    totalAmount: string
+    userId: string
+    vendorName: string
+    vendorTaxId?: string | null
+    vendorTaxIdValid: boolean
+    user?: {
+      fullName: string
+    } | null
+    receiptItems?: Array<{
+      id: string
+      category?: string | null
+      description?: string | null
+      normalizedDescription?: string | null
+      rawDescription?: string | null
+      quantity?: string | null
+      unitPrice: string
+      totalPrice: string
+    }> | null
+  } | null
+}
+
+export type ScanReceiptDraftResult = {
+  draft: {
+    items: Array<{
+      category: string
+      id: string
+      name: string
+      quantity: number
+      rawName: string
+      unitPrice: number
+    }>
+    receiptDate: string
+    totalAmount: number
+    vendorName: string
+    vendorTaxId: string
+  }
+  objectKey: string | null
+  receipt: {
+    id: string
+    status: string
+    userId: string
+    userName: string
+    vendorTaxIdValid: boolean
+  }
+  signedImageUrl: string | null
+}
+
 function toStreamPayload(
   receipt: NonNullable<ReceiptParsingSubscriptionResult["receiptsById"]>
 ) {
@@ -651,6 +736,21 @@ function toStreamPayload(
     receiptId: receipt.id,
     status: receipt.status ?? processingReceiptStatus,
   }
+}
+
+function getObjectKeyFromImageReference(imageReference: string) {
+  if (!imageReference.startsWith("r2://")) {
+    return null
+  }
+
+  const remainder = imageReference.slice("r2://".length)
+  const slashIndex = remainder.indexOf("/")
+
+  if (slashIndex === -1) {
+    return null
+  }
+
+  return remainder.slice(slashIndex + 1) || null
 }
 
 export const getScanBootstrap = createServerFn({ method: "GET" }).handler(
@@ -810,4 +910,58 @@ export const saveReceiptDraft = createServerFn({ method: "POST" })
       receiptId: saved.receipt.id,
       savedReceipt: saved,
     }
+  })
+
+export const getScanReceiptDraft = createServerFn({ method: "GET" })
+  .inputValidator((input) => graphQlUuidSchema.parse(input))
+  .handler(async ({ data }) => {
+    const result = (await execute(ScanReceiptDraftQuery, {
+      id: data,
+    })) as ScanReceiptDraftQueryResult
+    const receipt = result.receiptsById
+
+    if (!receipt) {
+      throw new Error("Não foi possível encontrar o recibo selecionado.")
+    }
+
+    const objectKey = receipt.imageUrl
+      ? getObjectKeyFromImageReference(receipt.imageUrl)
+      : null
+
+    let signedImageUrl: string | null = null
+
+    if (objectKey) {
+      try {
+        signedImageUrl = await createSignedReceiptReadUrl(objectKey)
+      } catch {
+        signedImageUrl = null
+      }
+    }
+
+    return {
+      draft: {
+        items: (receipt.receiptItems ?? []).map((item) => ({
+          category: item.category ?? "",
+          id: item.id,
+          name:
+            item.normalizedDescription ?? item.description ?? "Item sem nome",
+          quantity: Number.parseFloat(item.quantity ?? "0") || 0,
+          rawName: item.rawDescription ?? item.description ?? "",
+          unitPrice: Number.parseFloat(item.unitPrice) || 0,
+        })),
+        receiptDate: receipt.receiptDate,
+        totalAmount: Number.parseFloat(receipt.totalAmount) || 0,
+        vendorName: receipt.vendorName,
+        vendorTaxId: receipt.vendorTaxId ?? "",
+      },
+      objectKey,
+      receipt: {
+        id: receipt.id,
+        status: receipt.status ?? processingReceiptStatus,
+        userId: receipt.userId,
+        userName: receipt.user?.fullName ?? "Funcionário desconhecido",
+        vendorTaxIdValid: receipt.vendorTaxIdValid,
+      },
+      signedImageUrl,
+    } satisfies ScanReceiptDraftResult
   })

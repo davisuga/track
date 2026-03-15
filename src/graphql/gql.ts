@@ -22,6 +22,7 @@ type Documents = {
     "\n  mutation UpdateScanReceipt(\n    $keyId: Uuid!\n    $updateColumns: UpdateReceiptsByIdUpdateColumnsInput!\n  ) {\n    updateReceiptsById(keyId: $keyId, updateColumns: $updateColumns) {\n      returning {\n        id\n        vendorName\n        receiptDate\n        totalAmount\n        status\n        imageUrl\n        userId\n        vendorTaxId\n        vendorTaxIdValid\n        companyId\n      }\n    }\n  }\n": typeof types.UpdateScanReceiptDocument,
     "\n  query ScanReceiptItemIds($id: Uuid!) {\n    receiptsById(id: $id) {\n      id\n      receiptItems {\n        id\n      }\n    }\n  }\n": typeof types.ScanReceiptItemIdsDocument,
     "\n  mutation DeleteScanReceiptItem($id: Uuid!) {\n    deleteReceiptItemsById(keyId: $id) {\n      affectedRows\n    }\n  }\n": typeof types.DeleteScanReceiptItemDocument,
+    "\n  query ScanReceiptDraft($id: Uuid!) {\n    receiptsById(id: $id) {\n      id\n      imageUrl\n      receiptDate\n      status\n      totalAmount\n      userId\n      vendorName\n      vendorTaxId\n      vendorTaxIdValid\n      user {\n        fullName\n      }\n      receiptItems(\n        order_by: [{ totalPrice: Desc }, { normalizedDescription: Asc }]\n      ) {\n        id\n        category\n        description\n        normalizedDescription\n        rawDescription\n        quantity\n        unitPrice\n        totalPrice\n      }\n    }\n  }\n": typeof types.ScanReceiptDraftDocument,
 };
 const documents: Documents = {
     "\n  query ScanBootstrap {\n    users(order_by: [{ fullName: Asc }]) {\n      id\n      fullName\n      companyId\n    }\n  }\n": types.ScanBootstrapDocument,
@@ -31,6 +32,7 @@ const documents: Documents = {
     "\n  mutation UpdateScanReceipt(\n    $keyId: Uuid!\n    $updateColumns: UpdateReceiptsByIdUpdateColumnsInput!\n  ) {\n    updateReceiptsById(keyId: $keyId, updateColumns: $updateColumns) {\n      returning {\n        id\n        vendorName\n        receiptDate\n        totalAmount\n        status\n        imageUrl\n        userId\n        vendorTaxId\n        vendorTaxIdValid\n        companyId\n      }\n    }\n  }\n": types.UpdateScanReceiptDocument,
     "\n  query ScanReceiptItemIds($id: Uuid!) {\n    receiptsById(id: $id) {\n      id\n      receiptItems {\n        id\n      }\n    }\n  }\n": types.ScanReceiptItemIdsDocument,
     "\n  mutation DeleteScanReceiptItem($id: Uuid!) {\n    deleteReceiptItemsById(keyId: $id) {\n      affectedRows\n    }\n  }\n": types.DeleteScanReceiptItemDocument,
+    "\n  query ScanReceiptDraft($id: Uuid!) {\n    receiptsById(id: $id) {\n      id\n      imageUrl\n      receiptDate\n      status\n      totalAmount\n      userId\n      vendorName\n      vendorTaxId\n      vendorTaxIdValid\n      user {\n        fullName\n      }\n      receiptItems(\n        order_by: [{ totalPrice: Desc }, { normalizedDescription: Asc }]\n      ) {\n        id\n        category\n        description\n        normalizedDescription\n        rawDescription\n        quantity\n        unitPrice\n        totalPrice\n      }\n    }\n  }\n": types.ScanReceiptDraftDocument,
 };
 
 /**
@@ -61,6 +63,10 @@ export function graphql(source: "\n  query ScanReceiptItemIds($id: Uuid!) {\n   
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "\n  mutation DeleteScanReceiptItem($id: Uuid!) {\n    deleteReceiptItemsById(keyId: $id) {\n      affectedRows\n    }\n  }\n"): typeof import('./graphql').DeleteScanReceiptItemDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  query ScanReceiptDraft($id: Uuid!) {\n    receiptsById(id: $id) {\n      id\n      imageUrl\n      receiptDate\n      status\n      totalAmount\n      userId\n      vendorName\n      vendorTaxId\n      vendorTaxIdValid\n      user {\n        fullName\n      }\n      receiptItems(\n        order_by: [{ totalPrice: Desc }, { normalizedDescription: Asc }]\n      ) {\n        id\n        category\n        description\n        normalizedDescription\n        rawDescription\n        quantity\n        unitPrice\n        totalPrice\n      }\n    }\n  }\n"): typeof import('./graphql').ScanReceiptDraftDocument;
 
 
 export function graphql(source: string) {

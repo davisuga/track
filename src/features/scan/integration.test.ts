@@ -26,7 +26,7 @@ const createdRecordIds: CreatedRecordIds = {}
 
 async function postGraphQl<TData>(
   query: string,
-  variables?: Record<string, unknown>,
+  variables?: Record<string, unknown>
 ): Promise<TData> {
   const graphqlUrl = process.env.GRAPHQL_URL
 
@@ -61,7 +61,7 @@ async function postGraphQl<TData>(
       payload.errors
         .map((error) => error.message)
         .filter(Boolean)
-        .join("\n") || "GraphQL returned an unknown error.",
+        .join("\n") || "GraphQL returned an unknown error."
     )
   }
 
@@ -82,7 +82,7 @@ async function cleanupCreatedRecords() {
           }
         }
       `,
-      { id: createdRecordIds.receiptItemId },
+      { id: createdRecordIds.receiptItemId }
     )
   }
 
@@ -95,7 +95,7 @@ async function cleanupCreatedRecords() {
           }
         }
       `,
-      { id: createdRecordIds.receiptId },
+      { id: createdRecordIds.receiptId }
     )
   }
 }
@@ -105,43 +105,43 @@ afterAll(async () => {
 })
 
 describe("scan upload integration", () => {
-  it(
-    "uploads a receipt object to R2 and persists the uploaded reference through GraphQL",
-    async () => {
-      const upload = await createPresignedReceiptUploadUrl({
-        contentType: "image/jpeg",
-        fileName: "integration-test-receipt.jpg",
-        userId: seededUserId,
-      })
+  it("uploads a receipt object to R2 and persists the uploaded reference through GraphQL", async () => {
+    const upload = await createPresignedReceiptUploadUrl({
+      contentType: "image/jpeg",
+      fileName: "integration-test-receipt.jpg",
+      userId: seededUserId,
+    })
 
-      const imageBytes = Buffer.from(tinyJpegBase64, "base64")
-      const uploadResponse = await fetch(upload.uploadUrl, {
-        method: "PUT",
-        headers: {
-          "Content-Type": upload.contentType,
-        },
-        body: imageBytes,
-      })
+    const imageBytes = Buffer.from(tinyJpegBase64, "base64")
+    const uploadResponse = await fetch(upload.uploadUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": upload.contentType,
+      },
+      body: imageBytes,
+    })
 
-      expect(uploadResponse.ok).toBe(true)
+    expect(uploadResponse.ok).toBe(true)
 
-      const storedObject = await downloadReceiptObject(upload.objectKey)
-      expect(Buffer.compare(storedObject.buffer, imageBytes)).toBe(0)
-      expect(storedObject.contentType).toBe("image/jpeg")
+    const storedObject = await downloadReceiptObject(upload.objectKey)
+    expect(Buffer.compare(storedObject.buffer, imageBytes)).toBe(0)
+    expect(storedObject.contentType).toBe("image/jpeg")
 
-      const imageReference = getStoredImageReference(upload.objectKey)
-      const insertedReceipt = await postGraphQl<{
-        insertReceipts: {
-          returning: Array<{
-            id: string
-            imageUrl: string | null
-            status: string | null
-            userId: string
-            companyId: string
-          }>
-        }
-      }>(
-        `
+    const imageReference = getStoredImageReference(upload.objectKey)
+    const insertedReceipt = await postGraphQl<{
+      insertReceipts: {
+        returning: Array<{
+          id: string
+          imageUrl: string | null
+          status: string | null
+          userId: string
+          companyId: string
+          vendorTaxId: string | null
+          vendorTaxIdValid: boolean
+        }>
+      }
+    }>(
+      `
           mutation InsertIntegrationReceipt($objects: [InsertReceiptsObjectInput!]!) {
             insertReceipts(objects: $objects) {
               returning {
@@ -150,44 +150,50 @@ describe("scan upload integration", () => {
                 status
                 userId
                 companyId
+                vendorTaxId
+                vendorTaxIdValid
               }
             }
           }
         `,
-        {
-          objects: [
-            {
-              companyId: seededCompanyId,
-              imageUrl: imageReference,
-              receiptDate: "2026-03-14",
-              status: "extracted",
-              totalAmount: "1.00",
-              userId: seededUserId,
-              vendorName: "Integration Upload Test",
-            },
-          ],
-        },
-      )
+      {
+        objects: [
+          {
+            companyId: seededCompanyId,
+            imageUrl: imageReference,
+            receiptDate: "2026-03-14",
+            status: "extracted",
+            totalAmount: "1.00",
+            userId: seededUserId,
+            vendorName: "Integration Upload Test",
+            vendorTaxId: "11444777000161",
+            vendorTaxIdValid: true,
+          },
+        ],
+      }
+    )
 
-      const receipt = insertedReceipt.insertReceipts.returning[0]
-      expect(receipt).toBeDefined()
-      createdRecordIds.receiptId = receipt?.id
+    const receipt = insertedReceipt.insertReceipts.returning[0]
+    expect(receipt).toBeDefined()
+    createdRecordIds.receiptId = receipt?.id
 
-      expect(receipt?.imageUrl).toBe(imageReference)
-      expect(receipt?.status).toBe("extracted")
-      expect(receipt?.userId).toBe(seededUserId)
-      expect(receipt?.companyId).toBe(seededCompanyId)
+    expect(receipt?.imageUrl).toBe(imageReference)
+    expect(receipt?.status).toBe("extracted")
+    expect(receipt?.userId).toBe(seededUserId)
+    expect(receipt?.companyId).toBe(seededCompanyId)
+    expect(receipt?.vendorTaxId).toBe("11444777000161")
+    expect(receipt?.vendorTaxIdValid).toBe(true)
 
-      const insertedItem = await postGraphQl<{
-        insertReceiptItems: {
-          returning: Array<{
-            id: string
-            receiptId: string
-            totalPrice: string
-          }>
-        }
-      }>(
-        `
+    const insertedItem = await postGraphQl<{
+      insertReceiptItems: {
+        returning: Array<{
+          id: string
+          receiptId: string
+          totalPrice: string
+        }>
+      }
+    }>(
+      `
           mutation InsertIntegrationReceiptItem($objects: [InsertReceiptItemsObjectInput!]!) {
             insertReceiptItems(objects: $objects) {
               returning {
@@ -198,59 +204,75 @@ describe("scan upload integration", () => {
             }
           }
         `,
-        {
-          objects: [
-            {
-              category: "Test",
-              normalizedDescription: "Uploaded test item",
-              quantity: "1.00",
-              rawDescription: "Uploaded test item",
-              receiptId: receipt?.id,
-              totalPrice: "1.00",
-              unitPrice: "1.00",
-            },
-          ],
-        },
-      )
+      {
+        objects: [
+          {
+            category: "Test",
+            normalizedDescription: "Uploaded test item",
+            quantity: "1.00",
+            rawDescription: "Uploaded test item",
+            receiptId: receipt?.id,
+            totalPrice: "1.00",
+            unitPrice: "1.00",
+          },
+        ],
+      }
+    )
 
-      const item = insertedItem.insertReceiptItems.returning[0]
-      expect(item).toBeDefined()
-      createdRecordIds.receiptItemId = item?.id
-      expect(item?.receiptId).toBe(receipt?.id)
-      expect(item?.totalPrice).toBe("1.00")
+    const item = insertedItem.insertReceiptItems.returning[0]
+    expect(item).toBeDefined()
+    createdRecordIds.receiptItemId = item?.id
+    expect(item?.receiptId).toBe(receipt?.id)
+    expect(item?.totalPrice).toBe("1.00")
 
-      const queriedReceipt = await postGraphQl<{
-        receiptsById: {
-          id: string
-          imageUrl: string | null
-          receiptItems: Array<{
-            id: string
-            normalizedDescription: string
-          }> | null
+    const queriedReceipt = await postGraphQl<{
+      receiptsById: {
+        id: string
+        imageUrl: string | null
+        vendorTaxId: string | null
+        vendorTaxIdValid: boolean
+        user: {
+          fullName: string
         } | null
-      }>(
-        `
+        receiptItems: Array<{
+          id: string
+          normalizedDescription: string
+          rawDescription: string | null
+        }> | null
+      } | null
+    }>(
+      `
           query IntegrationReceiptById($id: Uuid!) {
             receiptsById(id: $id) {
               id
               imageUrl
+              vendorTaxId
+              vendorTaxIdValid
+              user {
+                fullName
+              }
               receiptItems {
                 id
                 normalizedDescription
+                rawDescription
               }
             }
           }
         `,
-        { id: receipt?.id },
-      )
+      { id: receipt?.id }
+    )
 
-      expect(queriedReceipt.receiptsById?.imageUrl).toBe(imageReference)
-      expect(
-        queriedReceipt.receiptsById?.receiptItems?.some(
-          (receiptItem) => receiptItem.id === item?.id,
-        ),
-      ).toBe(true)
-    },
-    20_000,
-  )
+    expect(queriedReceipt.receiptsById?.imageUrl).toBe(imageReference)
+    expect(queriedReceipt.receiptsById?.vendorTaxId).toBe("11444777000161")
+    expect(queriedReceipt.receiptsById?.vendorTaxIdValid).toBe(true)
+    expect(queriedReceipt.receiptsById?.user?.fullName).toBeDefined()
+    expect(
+      queriedReceipt.receiptsById?.receiptItems?.some(
+        (receiptItem) =>
+          receiptItem.id === item?.id &&
+          receiptItem.normalizedDescription === "Uploaded test item" &&
+          receiptItem.rawDescription === "Uploaded test item"
+      )
+    ).toBe(true)
+  }, 20_000)
 })

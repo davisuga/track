@@ -31,11 +31,11 @@ import {
 import { formatVendorTaxId } from "@/features/scan/utils"
 
 export const categoryToneClasses = [
-  "bg-[#1C1C1E]",
-  "bg-[#505056]",
-  "bg-[#7B7B83]",
-  "bg-[#A9A9B0]",
-  "bg-[#D8D8DD]",
+  "bg-[#04342C]",
+  "bg-[#0F6E56]",
+  "bg-[#1D9E75]",
+  "bg-[#5DCAA5]",
+  "bg-[#BDE8D8]",
 ] as const
 
 export function DashboardLoadingState() {
@@ -597,7 +597,7 @@ export function ReceiptDetailModal({
                       alt={t("dashboard.labels.receiptImageAlt", {
                         vendorName: query.data.receipt.vendorName,
                       })}
-                      className="h-full max-h-[70vh] w-full object-contain"
+                      className="h-full px-4 max-h-[70vh] w-full object-contain"
                       src={query.data.signedImageUrl}
                     />
                   ) : (

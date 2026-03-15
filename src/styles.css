@@ -38,42 +38,39 @@
 }
 
 :root {
-  /* =========================================
-     THEME: MODERN ENTERPRISE (Friendly & Soft)
-     ========================================= */
-  --theme-bg-base: #f2f2f7;
+  --theme-bg-base: #f8fcfa;
   --theme-bg-surface: #ffffff;
-  --theme-bg-inverse: #1c1c1e;
+  --theme-bg-inverse: #04342c;
 
-  --theme-text-primary: #1c1c1e;
-  --theme-text-secondary: #8e8e93;
-  --theme-text-inverse: #ffffff;
+  --theme-text-primary: #04342c;
+  --theme-text-secondary: #5d8176;
+  --theme-text-inverse: #f8fcfa;
 
-  --theme-accent: #1c1c1e;
+  --theme-accent: #1d9e75;
   --theme-accent-fg: #ffffff;
-  --theme-success: #34c759;
-  --theme-danger: #ff3b30;
-  --theme-border: #e5e5ea;
+  --theme-success: #5dcaa5;
+  --theme-danger: #d94d5f;
+  --theme-border: #d9ebe4;
 
-  --theme-radius-sm: 12px;
-  --theme-radius-md: 16px;
-  --theme-radius-lg: 24px;
-  --theme-radius-xl: 32px;
+  --theme-radius-sm: 2px;
+  --theme-radius-md: 6px;
+  --theme-radius-lg: 12px;
+  --theme-radius-xl: 16px;
   --theme-radius-full: 9999px;
 
-  --theme-shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.04);
-  --theme-shadow-floating: 0 20px 40px rgba(0, 0, 0, 0.12);
+  --theme-shadow-soft: 0 8px 24px rgba(4, 52, 44, 0.05);
+  --theme-shadow-floating: 0 20px 40px rgba(4, 52, 44, 0.12);
 
   --font-sans-var: "Inter", system-ui, sans-serif;
   --font-display-var: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono-var: "JetBrains Mono", monospace;
 
-  --sidebar: 220 18% 95%;
-  --sidebar-foreground: 240 6% 12%;
-  --sidebar-border: 220 14% 86%;
-  --sidebar-accent: 0 0% 100%;
-  --sidebar-accent-foreground: 240 6% 12%;
-  --sidebar-ring: 220 14% 72%;
+  --sidebar: 168 86% 11%;
+  --sidebar-foreground: 159 50% 94%;
+  --sidebar-border: 165 48% 20%;
+  --sidebar-accent: 166 47% 18%;
+  --sidebar-accent-foreground: 159 50% 96%;
+  --sidebar-ring: 154 43% 48%;
 }
 
 /* 

@@ -107,6 +107,27 @@ export function formatVendorTaxId(value: string) {
   )
 }
 
+const CATEGORY_TRANSLATIONS: Record<string, string> = {
+  beverage: "Bebidas",
+  beverages: "Bebidas",
+  cleaning: "Limpeza",
+  food: "Alimentação",
+  fuel: "Combustível",
+  "office supplies": "Material de escritório",
+  "office-supplies": "Material de escritório",
+  other: "Outros",
+}
+
+export function normalizeReceiptCategory(value: string) {
+  const normalizedValue = value.trim()
+
+  if (!normalizedValue) {
+    return ""
+  }
+
+  return CATEGORY_TRANSLATIONS[normalizedValue.toLowerCase()] ?? normalizedValue
+}
+
 export function normalizeOcrText(rawText: string) {
   return rawText
     .replaceAll("<|image|>", " ")

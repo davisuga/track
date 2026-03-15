@@ -3,6 +3,7 @@ import * as z from "zod"
 import {
   createReceiptItemId,
   getTodayDate,
+  normalizeReceiptCategory,
   sumItemTotals,
 } from "@/features/scan/utils"
 
@@ -94,7 +95,7 @@ export function toEditableReceiptDraft(
     items: draft.items.map((item) => ({
       id: createReceiptItemId(),
       ...item,
-      category: item.category ?? "",
+      category: normalizeReceiptCategory(item.category ?? ""),
       rawName: item.rawName ?? "",
     })),
   }

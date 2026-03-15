@@ -13,6 +13,8 @@ import { Route as ScanRouteImport } from './routes/scan'
 import { Route as ReceitasRouteImport } from './routes/receitas'
 import { Route as FuncionariosRouteImport } from './routes/funcionarios'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ScanRevisarReceiptIdRouteImport } from './routes/scan.revisar.$receiptId'
+import { Route as ScanProcessandoReceiptIdRouteImport } from './routes/scan.processando.$receiptId'
 
 const ScanRoute = ScanRouteImport.update({
   id: '/scan',
@@ -34,39 +36,75 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScanRevisarReceiptIdRoute = ScanRevisarReceiptIdRouteImport.update({
+  id: '/revisar/$receiptId',
+  path: '/revisar/$receiptId',
+  getParentRoute: () => ScanRoute,
+} as any)
+const ScanProcessandoReceiptIdRoute =
+  ScanProcessandoReceiptIdRouteImport.update({
+    id: '/processando/$receiptId',
+    path: '/processando/$receiptId',
+    getParentRoute: () => ScanRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/funcionarios': typeof FuncionariosRoute
   '/receitas': typeof ReceitasRoute
-  '/scan': typeof ScanRoute
+  '/scan': typeof ScanRouteWithChildren
+  '/scan/processando/$receiptId': typeof ScanProcessandoReceiptIdRoute
+  '/scan/revisar/$receiptId': typeof ScanRevisarReceiptIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/funcionarios': typeof FuncionariosRoute
   '/receitas': typeof ReceitasRoute
-  '/scan': typeof ScanRoute
+  '/scan': typeof ScanRouteWithChildren
+  '/scan/processando/$receiptId': typeof ScanProcessandoReceiptIdRoute
+  '/scan/revisar/$receiptId': typeof ScanRevisarReceiptIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/funcionarios': typeof FuncionariosRoute
   '/receitas': typeof ReceitasRoute
-  '/scan': typeof ScanRoute
+  '/scan': typeof ScanRouteWithChildren
+  '/scan/processando/$receiptId': typeof ScanProcessandoReceiptIdRoute
+  '/scan/revisar/$receiptId': typeof ScanRevisarReceiptIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/funcionarios' | '/receitas' | '/scan'
+  fullPaths:
+    | '/'
+    | '/funcionarios'
+    | '/receitas'
+    | '/scan'
+    | '/scan/processando/$receiptId'
+    | '/scan/revisar/$receiptId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/funcionarios' | '/receitas' | '/scan'
-  id: '__root__' | '/' | '/funcionarios' | '/receitas' | '/scan'
+  to:
+    | '/'
+    | '/funcionarios'
+    | '/receitas'
+    | '/scan'
+    | '/scan/processando/$receiptId'
+    | '/scan/revisar/$receiptId'
+  id:
+    | '__root__'
+    | '/'
+    | '/funcionarios'
+    | '/receitas'
+    | '/scan'
+    | '/scan/processando/$receiptId'
+    | '/scan/revisar/$receiptId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   FuncionariosRoute: typeof FuncionariosRoute
   ReceitasRoute: typeof ReceitasRoute
-  ScanRoute: typeof ScanRoute
+  ScanRoute: typeof ScanRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -99,14 +137,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scan/revisar/$receiptId': {
+      id: '/scan/revisar/$receiptId'
+      path: '/revisar/$receiptId'
+      fullPath: '/scan/revisar/$receiptId'
+      preLoaderRoute: typeof ScanRevisarReceiptIdRouteImport
+      parentRoute: typeof ScanRoute
+    }
+    '/scan/processando/$receiptId': {
+      id: '/scan/processando/$receiptId'
+      path: '/processando/$receiptId'
+      fullPath: '/scan/processando/$receiptId'
+      preLoaderRoute: typeof ScanProcessandoReceiptIdRouteImport
+      parentRoute: typeof ScanRoute
+    }
   }
 }
+
+interface ScanRouteChildren {
+  ScanProcessandoReceiptIdRoute: typeof ScanProcessandoReceiptIdRoute
+  ScanRevisarReceiptIdRoute: typeof ScanRevisarReceiptIdRoute
+}
+
+const ScanRouteChildren: ScanRouteChildren = {
+  ScanProcessandoReceiptIdRoute: ScanProcessandoReceiptIdRoute,
+  ScanRevisarReceiptIdRoute: ScanRevisarReceiptIdRoute,
+}
+
+const ScanRouteWithChildren = ScanRoute._addFileChildren(ScanRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   FuncionariosRoute: FuncionariosRoute,
   ReceitasRoute: ReceitasRoute,
-  ScanRoute: ScanRoute,
+  ScanRoute: ScanRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
