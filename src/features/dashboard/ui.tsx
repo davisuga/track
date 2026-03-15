@@ -217,7 +217,12 @@ export function DashboardAlertsList({
 }) {
   const { t } = useTranslation()
   const visibleAlerts = alerts
-    .filter((alert) => !dismissedAlertIds.includes(alert.id))
+    .filter(
+      (alert) =>
+        !dismissedAlertIds.includes(alert.id) &&
+        alert.metric.trim() &&
+        alert.text.trim()
+    )
     .slice(0, 8)
 
   if (!visibleAlerts.length) {
@@ -598,7 +603,7 @@ export function ReceiptDetailModal({
                       alt={t("dashboard.labels.receiptImageAlt", {
                         vendorName: query.data.receipt.vendorName,
                       })}
-                      className="h-full px-4 max-h-[70vh] w-full object-contain"
+                      className="h-full max-h-[70vh] w-full object-contain px-4"
                       src={query.data.signedImageUrl}
                     />
                   ) : (

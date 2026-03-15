@@ -422,10 +422,11 @@ function buildAlertText(
         }),
       }
     default:
-      return {
-        metric: "",
-        text: "",
-      }
+      console.warn("[dashboard] Unsupported alert type", {
+        alertId: alert.alertId,
+        alertType: alert.alertType,
+      })
+      return null
   }
 }
 
@@ -454,6 +455,14 @@ function groupAlerts(
     }
 
     const formattedAlert = buildAlertText(alert)
+
+    if (
+      !formattedAlert ||
+      !formattedAlert.metric.trim() ||
+      !formattedAlert.text.trim()
+    ) {
+      continue
+    }
 
     groupedAlerts.set(alert.alertId, {
       id: alert.alertId,
