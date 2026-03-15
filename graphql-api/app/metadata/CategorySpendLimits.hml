@@ -1,0 +1,175 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: CategorySpendLimits
+  fields:
+    - name: category
+      type: String_1!
+    - name: companyId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid!
+    - name: maxReceiptAmount
+      type: Bigdecimal!
+  graphql:
+    typeName: CategorySpendLimits
+    inputTypeName: CategorySpendLimitsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: category_spend_limits
+      fieldMapping:
+        category:
+          column:
+            name: category
+        companyId:
+          column:
+            name: company_id
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        maxReceiptAmount:
+          column:
+            name: max_receipt_amount
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: CategorySpendLimits
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - category
+          - companyId
+          - createdAt
+          - id
+          - maxReceiptAmount
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: CategorySpendLimitsBoolExp
+  operand:
+    object:
+      type: CategorySpendLimits
+      comparableFields:
+        - fieldName: category
+          booleanExpressionType: TextBoolExp
+        - fieldName: companyId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestamptzBoolExp
+        - fieldName: id
+          booleanExpressionType: UuidBoolExp
+        - fieldName: maxReceiptAmount
+          booleanExpressionType: NumericBoolExp
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: CategorySpendLimitsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: CategorySpendLimitsAggExp
+  operand:
+    object:
+      aggregatedType: CategorySpendLimits
+      aggregatableFields:
+        - fieldName: category
+          aggregateExpression: TextAggExp
+        - fieldName: companyId
+          aggregateExpression: UuidAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestamptzAggExp
+        - fieldName: id
+          aggregateExpression: UuidAggExp
+        - fieldName: maxReceiptAmount
+          aggregateExpression: NumericAggExp
+  count:
+    enable: true
+    returnType: Int64
+  graphql:
+    selectTypeName: CategorySpendLimitsAggExp
+
+---
+kind: OrderByExpression
+version: v1
+definition:
+  name: CategorySpendLimitsOrderByExp
+  operand:
+    object:
+      orderedType: CategorySpendLimits
+      orderableFields:
+        - fieldName: category
+          orderByExpression: String1OrderByExp
+        - fieldName: companyId
+          orderByExpression: UuidOrderByExp
+        - fieldName: createdAt
+          orderByExpression: TimestamptzOrderByExp
+        - fieldName: id
+          orderByExpression: UuidOrderByExp
+        - fieldName: maxReceiptAmount
+          orderByExpression: BigdecimalOrderByExp
+      orderableRelationships: []
+  graphql:
+    expressionTypeName: CategorySpendLimitsOrderByExp
+
+---
+kind: Model
+version: v2
+definition:
+  name: CategorySpendLimits
+  objectType: CategorySpendLimits
+  source:
+    dataConnectorName: my_pg
+    collection: category_spend_limits
+  filterExpressionType: CategorySpendLimitsBoolExp
+  aggregateExpression: CategorySpendLimitsAggExp
+  orderByExpression: CategorySpendLimitsOrderByExp
+  graphql:
+    selectMany:
+      queryRootField: categorySpendLimits
+      subscription:
+        rootField: categorySpendLimits
+    selectUniques:
+      - queryRootField: categorySpendLimitsByCategorySpendLimitsCompanyIdCategoryKey
+        uniqueIdentifier:
+          - category
+          - companyId
+        subscription:
+          rootField: categorySpendLimitsByCategorySpendLimitsCompanyIdCategoryKey
+      - queryRootField: categorySpendLimitsById
+        uniqueIdentifier:
+          - id
+        subscription:
+          rootField: categorySpendLimitsById
+    filterInputTypeName: CategorySpendLimitsFilterInput
+    aggregate:
+      queryRootField: categorySpendLimitsAggregate
+      subscription:
+        rootField: categorySpendLimitsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: CategorySpendLimits
+  permissions:
+    - role: admin
+      select:
+        filter: null
+        allowSubscriptions: true
+

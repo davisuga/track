@@ -16,6 +16,73 @@
   },
   "metadata": {
     "tables": {
+      "category_spend_limits": {
+        "schemaName": "public",
+        "tableName": "category_spend_limits",
+        "columns": {
+          "category": {
+            "name": "category",
+            "type": {
+              "scalarType": "text"
+            },
+            "nullable": "nonNullable",
+            "description": null
+          },
+          "company_id": {
+            "name": "company_id",
+            "type": {
+              "scalarType": "uuid"
+            },
+            "nullable": "nonNullable",
+            "description": null
+          },
+          "created_at": {
+            "name": "created_at",
+            "type": {
+              "scalarType": "timestamptz"
+            },
+            "nullable": "nullable",
+            "hasDefault": "hasDefault",
+            "description": null
+          },
+          "id": {
+            "name": "id",
+            "type": {
+              "scalarType": "uuid"
+            },
+            "nullable": "nonNullable",
+            "hasDefault": "hasDefault",
+            "description": null
+          },
+          "max_receipt_amount": {
+            "name": "max_receipt_amount",
+            "type": {
+              "scalarType": "numeric"
+            },
+            "nullable": "nonNullable",
+            "description": null
+          }
+        },
+        "uniquenessConstraints": {
+          "category_spend_limits_company_id_category_key": [
+            "category",
+            "company_id"
+          ],
+          "category_spend_limits_pkey": [
+            "id"
+          ]
+        },
+        "foreignRelations": {
+          "category_spend_limits_company_id_fkey": {
+            "foreignSchema": "public",
+            "foreignTable": "companies",
+            "columnMapping": {
+              "company_id": "id"
+            }
+          }
+        },
+        "description": null
+      },
       "companies": {
         "schemaName": "public",
         "tableName": "companies",
@@ -230,6 +297,23 @@
               "scalarType": "text"
             },
             "nullable": "nonNullable",
+            "description": null
+          },
+          "vendor_tax_id": {
+            "name": "vendor_tax_id",
+            "type": {
+              "scalarType": "text"
+            },
+            "nullable": "nullable",
+            "description": null
+          },
+          "vendor_tax_id_valid": {
+            "name": "vendor_tax_id_valid",
+            "type": {
+              "scalarType": "bool"
+            },
+            "nullable": "nonNullable",
+            "hasDefault": "hasDefault",
             "description": null
           }
         },

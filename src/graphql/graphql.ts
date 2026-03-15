@@ -48,6 +48,51 @@ export type BoolBoolExp = {
   _or?: InputMaybe<Array<BoolBoolExp>>;
 };
 
+export type CategorySpendLimits = {
+  __typename?: 'CategorySpendLimits';
+  category: Scalars['String1']['output'];
+  companyId: Scalars['Uuid']['output'];
+  createdAt?: Maybe<Scalars['Timestamptz']['output']>;
+  id: Scalars['Uuid']['output'];
+  maxReceiptAmount: Scalars['Bigdecimal']['output'];
+};
+
+export type CategorySpendLimitsAggExp = {
+  __typename?: 'CategorySpendLimitsAggExp';
+  _count: Scalars['Int64']['output'];
+  category: TextAggExp;
+  companyId: UuidAggExp;
+  createdAt: TimestamptzAggExp;
+  id: UuidAggExp;
+  maxReceiptAmount: NumericAggExp;
+};
+
+export type CategorySpendLimitsBoolExp = {
+  _and?: InputMaybe<Array<CategorySpendLimitsBoolExp>>;
+  _not?: InputMaybe<CategorySpendLimitsBoolExp>;
+  _or?: InputMaybe<Array<CategorySpendLimitsBoolExp>>;
+  category?: InputMaybe<TextBoolExp>;
+  companyId?: InputMaybe<UuidBoolExp>;
+  createdAt?: InputMaybe<TimestamptzBoolExp>;
+  id?: InputMaybe<UuidBoolExp>;
+  maxReceiptAmount?: InputMaybe<NumericBoolExp>;
+};
+
+export type CategorySpendLimitsFilterInput = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<CategorySpendLimitsOrderByExp>>;
+  where?: InputMaybe<CategorySpendLimitsBoolExp>;
+};
+
+export type CategorySpendLimitsOrderByExp = {
+  category?: InputMaybe<OrderBy>;
+  companyId?: InputMaybe<OrderBy>;
+  createdAt?: InputMaybe<OrderBy>;
+  id?: InputMaybe<OrderBy>;
+  maxReceiptAmount?: InputMaybe<OrderBy>;
+};
+
 export type Companies = {
   __typename?: 'Companies';
   createdAt?: Maybe<Scalars['Timestamptz']['output']>;
@@ -184,6 +229,23 @@ export type DeleteUsersByIdResponse = {
   returning: Array<Users>;
 };
 
+export type InsertCategorySpendLimitsObjectInput = {
+  category: Scalars['String1']['input'];
+  companyId: Scalars['Uuid']['input'];
+  createdAt?: InputMaybe<Scalars['Timestamptz']['input']>;
+  id?: InputMaybe<Scalars['Uuid']['input']>;
+  maxReceiptAmount: Scalars['Bigdecimal']['input'];
+};
+
+/** Responses from the 'insert_category_spend_limits' procedure */
+export type InsertCategorySpendLimitsResponse = {
+  __typename?: 'InsertCategorySpendLimitsResponse';
+  /** The number of rows affected by the mutation */
+  affectedRows: Scalars['Int32']['output'];
+  /** Data from rows affected by the mutation */
+  returning: Array<CategorySpendLimits>;
+};
+
 export type InsertCompaniesObjectInput = {
   createdAt?: InputMaybe<Scalars['Timestamptz']['input']>;
   id?: InputMaybe<Scalars['Uuid']['input']>;
@@ -230,6 +292,8 @@ export type InsertReceiptsObjectInput = {
   totalAmount: Scalars['Bigdecimal']['input'];
   userId: Scalars['Uuid']['input'];
   vendorName: Scalars['String1']['input'];
+  vendorTaxId?: InputMaybe<Scalars['String1']['input']>;
+  vendorTaxIdValid?: InputMaybe<Scalars['Boolean1']['input']>;
 };
 
 /** Responses from the 'insert_receipts' procedure */
@@ -271,6 +335,8 @@ export type Mutation = {
   deleteUsersByEmail: DeleteUsersByEmailResponse;
   /** Delete any row on the 'users' collection using the 'id' key */
   deleteUsersById: DeleteUsersByIdResponse;
+  /** Insert into the category_spend_limits table */
+  insertCategorySpendLimits: InsertCategorySpendLimitsResponse;
   /** Insert into the companies table */
   insertCompanies: InsertCompaniesResponse;
   /** Insert into the receipt_items table */
@@ -279,6 +345,8 @@ export type Mutation = {
   insertReceipts: InsertReceiptsResponse;
   /** Insert into the users table */
   insertUsers: InsertUsersResponse;
+  /** Update any row on the 'category_spend_limits' collection using the 'id' key */
+  updateCategorySpendLimitsById: UpdateCategorySpendLimitsByIdResponse;
   /** Update any row on the 'companies' collection using the 'id' key */
   updateCompaniesById: UpdateCompaniesByIdResponse;
   /** Update any row on the 'receipt_items' collection using the 'id' key */
@@ -322,6 +390,12 @@ export type MutationDeleteUsersByIdArgs = {
 };
 
 
+export type MutationInsertCategorySpendLimitsArgs = {
+  objects: Array<InsertCategorySpendLimitsObjectInput>;
+  postCheck?: InputMaybe<CategorySpendLimitsBoolExp>;
+};
+
+
 export type MutationInsertCompaniesArgs = {
   objects: Array<InsertCompaniesObjectInput>;
   postCheck?: InputMaybe<CompaniesBoolExp>;
@@ -343,6 +417,14 @@ export type MutationInsertReceiptsArgs = {
 export type MutationInsertUsersArgs = {
   objects: Array<InsertUsersObjectInput>;
   postCheck?: InputMaybe<UsersBoolExp>;
+};
+
+
+export type MutationUpdateCategorySpendLimitsByIdArgs = {
+  keyId: Scalars['Uuid']['input'];
+  postCheck?: InputMaybe<CategorySpendLimitsBoolExp>;
+  preCheck?: InputMaybe<CategorySpendLimitsBoolExp>;
+  updateColumns: UpdateCategorySpendLimitsByIdUpdateColumnsInput;
 };
 
 
@@ -424,6 +506,10 @@ export enum OrderBy {
 
 export type Query = {
   __typename?: 'Query';
+  categorySpendLimits?: Maybe<Array<CategorySpendLimits>>;
+  categorySpendLimitsAggregate?: Maybe<CategorySpendLimitsAggExp>;
+  categorySpendLimitsByCategorySpendLimitsCompanyIdCategoryKey?: Maybe<CategorySpendLimits>;
+  categorySpendLimitsById?: Maybe<CategorySpendLimits>;
   companies?: Maybe<Array<Companies>>;
   companiesAggregate?: Maybe<CompaniesAggExp>;
   companiesById?: Maybe<Companies>;
@@ -437,6 +523,30 @@ export type Query = {
   usersAggregate?: Maybe<UsersAggExp>;
   usersByEmail?: Maybe<Users>;
   usersById?: Maybe<Users>;
+};
+
+
+export type QueryCategorySpendLimitsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<CategorySpendLimitsOrderByExp>>;
+  where?: InputMaybe<CategorySpendLimitsBoolExp>;
+};
+
+
+export type QueryCategorySpendLimitsAggregateArgs = {
+  filter_input?: InputMaybe<CategorySpendLimitsFilterInput>;
+};
+
+
+export type QueryCategorySpendLimitsByCategorySpendLimitsCompanyIdCategoryKeyArgs = {
+  category: Scalars['String1']['input'];
+  companyId: Scalars['Uuid']['input'];
+};
+
+
+export type QueryCategorySpendLimitsByIdArgs = {
+  id: Scalars['Uuid']['input'];
 };
 
 
@@ -595,6 +705,8 @@ export type Receipts = {
   user?: Maybe<Users>;
   userId: Scalars['Uuid']['output'];
   vendorName: Scalars['String1']['output'];
+  vendorTaxId?: Maybe<Scalars['String1']['output']>;
+  vendorTaxIdValid: Scalars['Boolean1']['output'];
 };
 
 
@@ -622,6 +734,8 @@ export type ReceiptsAggExp = {
   totalAmount: NumericAggExp;
   userId: UuidAggExp;
   vendorName: TextAggExp;
+  vendorTaxId: TextAggExp;
+  vendorTaxIdValid: BoolAggExp;
 };
 
 export type ReceiptsBoolExp = {
@@ -640,6 +754,8 @@ export type ReceiptsBoolExp = {
   user?: InputMaybe<UsersBoolExp>;
   userId?: InputMaybe<UuidBoolExp>;
   vendorName?: InputMaybe<TextBoolExp>;
+  vendorTaxId?: InputMaybe<TextBoolExp>;
+  vendorTaxIdValid?: InputMaybe<BoolBoolExp>;
 };
 
 export type ReceiptsFilterInput = {
@@ -661,10 +777,16 @@ export type ReceiptsOrderByExp = {
   user?: InputMaybe<UsersOrderByExp>;
   userId?: InputMaybe<OrderBy>;
   vendorName?: InputMaybe<OrderBy>;
+  vendorTaxId?: InputMaybe<OrderBy>;
+  vendorTaxIdValid?: InputMaybe<OrderBy>;
 };
 
 export type Subscription = {
   __typename?: 'Subscription';
+  categorySpendLimits?: Maybe<Array<CategorySpendLimits>>;
+  categorySpendLimitsAggregate?: Maybe<CategorySpendLimitsAggExp>;
+  categorySpendLimitsByCategorySpendLimitsCompanyIdCategoryKey?: Maybe<CategorySpendLimits>;
+  categorySpendLimitsById?: Maybe<CategorySpendLimits>;
   companies?: Maybe<Array<Companies>>;
   companiesAggregate?: Maybe<CompaniesAggExp>;
   companiesById?: Maybe<Companies>;
@@ -678,6 +800,30 @@ export type Subscription = {
   usersAggregate?: Maybe<UsersAggExp>;
   usersByEmail?: Maybe<Users>;
   usersById?: Maybe<Users>;
+};
+
+
+export type SubscriptionCategorySpendLimitsArgs = {
+  limit?: InputMaybe<Scalars['Int']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  order_by?: InputMaybe<Array<CategorySpendLimitsOrderByExp>>;
+  where?: InputMaybe<CategorySpendLimitsBoolExp>;
+};
+
+
+export type SubscriptionCategorySpendLimitsAggregateArgs = {
+  filter_input?: InputMaybe<CategorySpendLimitsFilterInput>;
+};
+
+
+export type SubscriptionCategorySpendLimitsByCategorySpendLimitsCompanyIdCategoryKeyArgs = {
+  category: Scalars['String1']['input'];
+  companyId: Scalars['Uuid']['input'];
+};
+
+
+export type SubscriptionCategorySpendLimitsByIdArgs = {
+  id: Scalars['Uuid']['input'];
 };
 
 
@@ -811,6 +957,59 @@ export type TimestamptzBoolExp = {
   _or?: InputMaybe<Array<TimestamptzBoolExp>>;
 };
 
+/** Responses from the 'update_category_spend_limits_by_id' procedure */
+export type UpdateCategorySpendLimitsByIdResponse = {
+  __typename?: 'UpdateCategorySpendLimitsByIdResponse';
+  /** The number of rows affected by the mutation */
+  affectedRows: Scalars['Int32']['output'];
+  /** Data from rows affected by the mutation */
+  returning: Array<CategorySpendLimits>;
+};
+
+/** Update the columns of the 'category_spend_limits' collection */
+export type UpdateCategorySpendLimitsByIdUpdateColumnsInput = {
+  /** Update the 'category' column in the 'category_spend_limits' collection. */
+  category?: InputMaybe<UpdateColumnCategorySpendLimitsCategoryInput>;
+  /** Update the 'company_id' column in the 'category_spend_limits' collection. */
+  companyId?: InputMaybe<UpdateColumnCategorySpendLimitsCompanyIdInput>;
+  /** Update the 'created_at' column in the 'category_spend_limits' collection. */
+  createdAt?: InputMaybe<UpdateColumnCategorySpendLimitsCreatedAtInput>;
+  /** Update the 'id' column in the 'category_spend_limits' collection. */
+  id?: InputMaybe<UpdateColumnCategorySpendLimitsIdInput>;
+  /** Update the 'max_receipt_amount' column in the 'category_spend_limits' collection. */
+  maxReceiptAmount?: InputMaybe<UpdateColumnCategorySpendLimitsMaxReceiptAmountInput>;
+};
+
+/** Update the 'category' column in the 'category_spend_limits' collection */
+export type UpdateColumnCategorySpendLimitsCategoryInput = {
+  /** Set the column to this value */
+  set: Scalars['String1']['input'];
+};
+
+/** Update the 'company_id' column in the 'category_spend_limits' collection */
+export type UpdateColumnCategorySpendLimitsCompanyIdInput = {
+  /** Set the column to this value */
+  set: Scalars['Uuid']['input'];
+};
+
+/** Update the 'created_at' column in the 'category_spend_limits' collection */
+export type UpdateColumnCategorySpendLimitsCreatedAtInput = {
+  /** Set the column to this value */
+  set?: InputMaybe<Scalars['Timestamptz']['input']>;
+};
+
+/** Update the 'id' column in the 'category_spend_limits' collection */
+export type UpdateColumnCategorySpendLimitsIdInput = {
+  /** Set the column to this value */
+  set: Scalars['Uuid']['input'];
+};
+
+/** Update the 'max_receipt_amount' column in the 'category_spend_limits' collection */
+export type UpdateColumnCategorySpendLimitsMaxReceiptAmountInput = {
+  /** Set the column to this value */
+  set: Scalars['Bigdecimal']['input'];
+};
+
 /** Update the 'created_at' column in the 'companies' collection */
 export type UpdateColumnCompaniesCreatedAtInput = {
   /** Set the column to this value */
@@ -937,6 +1136,18 @@ export type UpdateColumnReceiptsVendorNameInput = {
   set: Scalars['String1']['input'];
 };
 
+/** Update the 'vendor_tax_id' column in the 'receipts' collection */
+export type UpdateColumnReceiptsVendorTaxIdInput = {
+  /** Set the column to this value */
+  set?: InputMaybe<Scalars['String1']['input']>;
+};
+
+/** Update the 'vendor_tax_id_valid' column in the 'receipts' collection */
+export type UpdateColumnReceiptsVendorTaxIdValidInput = {
+  /** Set the column to this value */
+  set: Scalars['Boolean1']['input'];
+};
+
 /** Update the 'company_id' column in the 'users' collection */
 export type UpdateColumnUsersCompanyIdInput = {
   /** Set the column to this value */
@@ -1052,6 +1263,10 @@ export type UpdateReceiptsByIdUpdateColumnsInput = {
   userId?: InputMaybe<UpdateColumnReceiptsUserIdInput>;
   /** Update the 'vendor_name' column in the 'receipts' collection. */
   vendorName?: InputMaybe<UpdateColumnReceiptsVendorNameInput>;
+  /** Update the 'vendor_tax_id' column in the 'receipts' collection. */
+  vendorTaxId?: InputMaybe<UpdateColumnReceiptsVendorTaxIdInput>;
+  /** Update the 'vendor_tax_id_valid' column in the 'receipts' collection. */
+  vendorTaxIdValid?: InputMaybe<UpdateColumnReceiptsVendorTaxIdValidInput>;
 };
 
 /** Responses from the 'update_users_by_email' procedure */
@@ -1214,10 +1429,31 @@ export type UuidBoolExp = {
   _or?: InputMaybe<Array<UuidBoolExp>>;
 };
 
-export type ReceiptsQueryVariables = Exact<{ [key: string]: never; }>;
+export type ScanBootstrapQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ReceiptsQuery = { __typename?: 'Query', receipts?: Array<{ __typename?: 'Receipts', id: any, vendorName: any, receiptDate: any, user?: { __typename?: 'Users', fullName: any } | null }> | null };
+export type ScanBootstrapQuery = { __typename?: 'Query', users?: Array<{ __typename?: 'Users', id: any, fullName: any, companyId: any }> | null };
+
+export type ScanUserContextQueryVariables = Exact<{
+  id: Scalars['Uuid']['input'];
+}>;
+
+
+export type ScanUserContextQuery = { __typename?: 'Query', usersById?: { __typename?: 'Users', id: any, fullName: any, companyId: any } | null };
+
+export type InsertScanReceiptMutationVariables = Exact<{
+  objects: Array<InsertReceiptsObjectInput> | InsertReceiptsObjectInput;
+}>;
+
+
+export type InsertScanReceiptMutation = { __typename?: 'Mutation', insertReceipts: { __typename?: 'InsertReceiptsResponse', returning: Array<{ __typename?: 'Receipts', id: any, vendorName: any, receiptDate: any, totalAmount: any, status?: any | null, imageUrl?: any | null, userId: any, vendorTaxId?: any | null, vendorTaxIdValid: any, companyId: any }> } };
+
+export type InsertScanReceiptItemsMutationVariables = Exact<{
+  objects: Array<InsertReceiptItemsObjectInput> | InsertReceiptItemsObjectInput;
+}>;
+
+
+export type InsertScanReceiptItemsMutation = { __typename?: 'Mutation', insertReceiptItems: { __typename?: 'InsertReceiptItemsResponse', affectedRows: any, returning: Array<{ __typename?: 'ReceiptItems', id: any, description: any, category?: any | null, quantity?: any | null, unitPrice: any, totalPrice: any }> } };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -1238,15 +1474,54 @@ export class TypedDocumentString<TResult, TVariables>
   }
 }
 
-export const ReceiptsDocument = new TypedDocumentString(`
-    query Receipts {
-  receipts {
+export const ScanBootstrapDocument = new TypedDocumentString(`
+    query ScanBootstrap {
+  users(order_by: [{fullName: Asc}]) {
     id
-    vendorName
-    user {
-      fullName
-    }
-    receiptDate
+    fullName
+    companyId
   }
 }
-    `) as unknown as TypedDocumentString<ReceiptsQuery, ReceiptsQueryVariables>;
+    `) as unknown as TypedDocumentString<ScanBootstrapQuery, ScanBootstrapQueryVariables>;
+export const ScanUserContextDocument = new TypedDocumentString(`
+    query ScanUserContext($id: Uuid!) {
+  usersById(id: $id) {
+    id
+    fullName
+    companyId
+  }
+}
+    `) as unknown as TypedDocumentString<ScanUserContextQuery, ScanUserContextQueryVariables>;
+export const InsertScanReceiptDocument = new TypedDocumentString(`
+    mutation InsertScanReceipt($objects: [InsertReceiptsObjectInput!]!) {
+  insertReceipts(objects: $objects) {
+    returning {
+      id
+      vendorName
+      receiptDate
+      totalAmount
+      status
+      imageUrl
+      userId
+      vendorTaxId
+      vendorTaxIdValid
+      companyId
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<InsertScanReceiptMutation, InsertScanReceiptMutationVariables>;
+export const InsertScanReceiptItemsDocument = new TypedDocumentString(`
+    mutation InsertScanReceiptItems($objects: [InsertReceiptItemsObjectInput!]!) {
+  insertReceiptItems(objects: $objects) {
+    affectedRows
+    returning {
+      id
+      description
+      category
+      quantity
+      unitPrice
+      totalPrice
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<InsertScanReceiptItemsMutation, InsertScanReceiptItemsMutationVariables>;

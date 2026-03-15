@@ -20,6 +20,17 @@ definition:
             count_scalar_type: int8
       collections:
         - arguments: {}
+          name: category_spend_limits
+          type: category_spend_limits
+          uniqueness_constraints:
+            category_spend_limits_company_id_category_key:
+              unique_columns:
+                - category
+                - company_id
+            category_spend_limits_pkey:
+              unique_columns:
+                - id
+        - arguments: {}
           name: companies
           type: companies
           uniqueness_constraints:
@@ -52,6 +63,36 @@ definition:
                 - id
       functions: []
       object_types:
+        category_spend_limits:
+          fields:
+            category:
+              type:
+                name: text
+                type: named
+            company_id:
+              type:
+                name: uuid
+                type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            id:
+              type:
+                name: uuid
+                type: named
+            max_receipt_amount:
+              type:
+                name: numeric
+                type: named
+          foreign_keys:
+            category_spend_limits_company_id_fkey:
+              column_mapping:
+                company_id:
+                  - id
+              foreign_collection: companies
         companies:
           fields:
             created_at:
@@ -68,6 +109,38 @@ definition:
               type:
                 name: text
                 type: named
+          foreign_keys: {}
+        delete_category_spend_limits_by_category_and_company_id_response:
+          description: Responses from the 'delete_category_spend_limits_by_category_and_company_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: category_spend_limits
+                  type: named
+                type: array
+          foreign_keys: {}
+        delete_category_spend_limits_by_id_response:
+          description: Responses from the 'delete_category_spend_limits_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: category_spend_limits
+                  type: named
+                type: array
           foreign_keys: {}
         delete_companies_by_id_response:
           description: Responses from the 'delete_companies_by_id' procedure
@@ -146,6 +219,49 @@ definition:
               type:
                 element_type:
                   name: users
+                  type: named
+                type: array
+          foreign_keys: {}
+        insert_category_spend_limits_object:
+          fields:
+            category:
+              type:
+                name: text
+                type: named
+            company_id:
+              type:
+                name: uuid
+                type: named
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+            id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: uuid
+                  type: named
+            max_receipt_amount:
+              type:
+                name: numeric
+                type: named
+          foreign_keys: {}
+        insert_category_spend_limits_response:
+          description: Responses from the 'insert_category_spend_limits' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: category_spend_limits
                   type: named
                 type: array
           foreign_keys: {}
@@ -295,6 +411,18 @@ definition:
               type:
                 name: text
                 type: named
+            vendor_tax_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            vendor_tax_id_valid:
+              type:
+                type: nullable
+                underlying_type:
+                  name: bool
+                  type: named
           foreign_keys: {}
         insert_receipts_response:
           description: Responses from the 'insert_receipts' procedure
@@ -455,6 +583,16 @@ definition:
               type:
                 name: text
                 type: named
+            vendor_tax_id:
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+            vendor_tax_id_valid:
+              type:
+                name: bool
+                type: named
           foreign_keys:
             receipts_company_id_fkey:
               column_mapping:
@@ -466,6 +604,163 @@ definition:
                 user_id:
                   - id
               foreign_collection: users
+        update_category_spend_limits_by_category_and_company_id_response:
+          description: Responses from the 'update_category_spend_limits_by_category_and_company_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: category_spend_limits
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_category_spend_limits_by_category_and_company_id_update_columns:
+          description: Update the columns of the 'category_spend_limits' collection
+          fields:
+            category:
+              description: Update the 'category' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_category
+                  type: named
+            company_id:
+              description: Update the 'company_id' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_company_id
+                  type: named
+            created_at:
+              description: Update the 'created_at' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_created_at
+                  type: named
+            id:
+              description: Update the 'id' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_id
+                  type: named
+            max_receipt_amount:
+              description: Update the 'max_receipt_amount' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_max_receipt_amount
+                  type: named
+          foreign_keys: {}
+        update_category_spend_limits_by_id_response:
+          description: Responses from the 'update_category_spend_limits_by_id' procedure
+          fields:
+            affected_rows:
+              description: The number of rows affected by the mutation
+              type:
+                name: int4
+                type: named
+            returning:
+              description: Data from rows affected by the mutation
+              type:
+                element_type:
+                  name: category_spend_limits
+                  type: named
+                type: array
+          foreign_keys: {}
+        update_category_spend_limits_by_id_update_columns:
+          description: Update the columns of the 'category_spend_limits' collection
+          fields:
+            category:
+              description: Update the 'category' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_category
+                  type: named
+            company_id:
+              description: Update the 'company_id' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_company_id
+                  type: named
+            created_at:
+              description: Update the 'created_at' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_created_at
+                  type: named
+            id:
+              description: Update the 'id' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_id
+                  type: named
+            max_receipt_amount:
+              description: Update the 'max_receipt_amount' column in the 'category_spend_limits' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_category_spend_limits_max_receipt_amount
+                  type: named
+          foreign_keys: {}
+        update_column_category_spend_limits_category:
+          description: Update the 'category' column in the 'category_spend_limits' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: text
+                type: named
+          foreign_keys: {}
+        update_column_category_spend_limits_company_id:
+          description: Update the 'company_id' column in the 'category_spend_limits' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_category_spend_limits_created_at:
+          description: Update the 'created_at' column in the 'category_spend_limits' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: timestamptz
+                  type: named
+          foreign_keys: {}
+        update_column_category_spend_limits_id:
+          description: Update the 'id' column in the 'category_spend_limits' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: uuid
+                type: named
+          foreign_keys: {}
+        update_column_category_spend_limits_max_receipt_amount:
+          description: Update the 'max_receipt_amount' column in the 'category_spend_limits' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: numeric
+                type: named
+          foreign_keys: {}
         update_column_companies_created_at:
           description: Update the 'created_at' column in the 'companies' collection
           fields:
@@ -669,6 +964,26 @@ definition:
               description: Set the column to this value
               type:
                 name: text
+                type: named
+          foreign_keys: {}
+        update_column_receipts_vendor_tax_id:
+          description: Update the 'vendor_tax_id' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                type: nullable
+                underlying_type:
+                  name: text
+                  type: named
+          foreign_keys: {}
+        update_column_receipts_vendor_tax_id_valid:
+          description: Update the 'vendor_tax_id_valid' column in the 'receipts' collection
+          fields:
+            _set:
+              description: Set the column to this value
+              type:
+                name: bool
                 type: named
           foreign_keys: {}
         update_column_users_company_id:
@@ -933,6 +1248,20 @@ definition:
                 underlying_type:
                   name: update_column_receipts_vendor_name
                   type: named
+            vendor_tax_id:
+              description: Update the 'vendor_tax_id' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_vendor_tax_id
+                  type: named
+            vendor_tax_id_valid:
+              description: Update the 'vendor_tax_id_valid' column in the 'receipts' collection.
+              type:
+                type: nullable
+                underlying_type:
+                  name: update_column_receipts_vendor_tax_id_valid
+                  type: named
           foreign_keys: {}
         update_users_by_email_response:
           description: Responses from the 'update_users_by_email' procedure
@@ -1094,6 +1423,44 @@ definition:
               foreign_collection: companies
       procedures:
         - arguments:
+            key_category:
+              type:
+                name: text
+                type: named
+            key_company_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'category_spend_limits' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: category_spend_limits
+                  type: predicate
+          description: Delete any row on the 'category_spend_limits' collection using the 'category' and 'company_id' keys
+          name: delete_category_spend_limits_by_category_and_company_id
+          result_type:
+            name: delete_category_spend_limits_by_category_and_company_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            pre_check:
+              description: Delete permission predicate over the 'category_spend_limits' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: category_spend_limits
+                  type: predicate
+          description: Delete any row on the 'category_spend_limits' collection using the 'id' key
+          name: delete_category_spend_limits_by_id
+          result_type:
+            name: delete_category_spend_limits_by_id_response
+            type: named
+        - arguments:
             key_id:
               type:
                 name: uuid
@@ -1182,6 +1549,25 @@ definition:
             objects:
               type:
                 element_type:
+                  name: insert_category_spend_limits_object
+                  type: named
+                type: array
+            post_check:
+              description: Insert permission predicate over the 'category_spend_limits' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: category_spend_limits
+                  type: predicate
+          description: Insert into the category_spend_limits table
+          name: insert_category_spend_limits
+          result_type:
+            name: insert_category_spend_limits_response
+            type: named
+        - arguments:
+            objects:
+              type:
+                element_type:
                   name: insert_companies_object
                   type: named
                 type: array
@@ -1253,6 +1639,66 @@ definition:
           name: insert_users
           result_type:
             name: insert_users_response
+            type: named
+        - arguments:
+            key_category:
+              type:
+                name: text
+                type: named
+            key_company_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'category_spend_limits' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: category_spend_limits
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'category_spend_limits' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: category_spend_limits
+                  type: predicate
+            update_columns:
+              type:
+                name: update_category_spend_limits_by_category_and_company_id_update_columns
+                type: named
+          description: Update any row on the 'category_spend_limits' collection using the 'category' and 'company_id' keys
+          name: update_category_spend_limits_by_category_and_company_id
+          result_type:
+            name: update_category_spend_limits_by_category_and_company_id_response
+            type: named
+        - arguments:
+            key_id:
+              type:
+                name: uuid
+                type: named
+            post_check:
+              description: Update permission post-condition predicate over the 'category_spend_limits' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: category_spend_limits
+                  type: predicate
+            pre_check:
+              description: Update permission pre-condition predicate over the 'category_spend_limits' collection
+              type:
+                type: nullable
+                underlying_type:
+                  object_type_name: category_spend_limits
+                  type: predicate
+            update_columns:
+              type:
+                name: update_category_spend_limits_by_id_update_columns
+                type: named
+          description: Update any row on the 'category_spend_limits' collection using the 'id' key
+          name: update_category_spend_limits_by_id
+          result_type:
+            name: update_category_spend_limits_by_id_response
             type: named
         - arguments:
             key_id:

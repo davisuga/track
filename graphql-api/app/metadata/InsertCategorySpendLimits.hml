@@ -1,0 +1,126 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertCategorySpendLimitsObject
+  fields:
+    - name: category
+      type: String_1!
+    - name: companyId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamptz
+    - name: id
+      type: Uuid
+    - name: maxReceiptAmount
+      type: Bigdecimal!
+  graphql:
+    typeName: InsertCategorySpendLimitsObject
+    inputTypeName: InsertCategorySpendLimitsObjectInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: insert_category_spend_limits_object
+      fieldMapping:
+        category:
+          column:
+            name: category
+        companyId:
+          column:
+            name: company_id
+        createdAt:
+          column:
+            name: created_at
+        id:
+          column:
+            name: id
+        maxReceiptAmount:
+          column:
+            name: max_receipt_amount
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertCategorySpendLimitsObject
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - category
+          - companyId
+          - createdAt
+          - id
+          - maxReceiptAmount
+
+---
+kind: ObjectType
+version: v1
+definition:
+  name: InsertCategorySpendLimitsResponse
+  description: Responses from the 'insert_category_spend_limits' procedure
+  fields:
+    - name: affectedRows
+      type: Int32!
+      description: The number of rows affected by the mutation
+    - name: returning
+      type: "[CategorySpendLimits!]!"
+      description: Data from rows affected by the mutation
+  graphql:
+    typeName: InsertCategorySpendLimitsResponse
+    inputTypeName: InsertCategorySpendLimitsResponseInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: my_pg
+      dataConnectorObjectType: insert_category_spend_limits_response
+      fieldMapping:
+        affectedRows:
+          column:
+            name: affected_rows
+        returning:
+          column:
+            name: returning
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: InsertCategorySpendLimitsResponse
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - affectedRows
+          - returning
+
+---
+kind: Command
+version: v1
+definition:
+  name: InsertCategorySpendLimits
+  outputType: InsertCategorySpendLimitsResponse!
+  arguments:
+    - name: objects
+      type: "[InsertCategorySpendLimitsObject!]!"
+    - name: postCheck
+      type: CategorySpendLimitsBoolExp
+      description: Insert permission predicate over the 'category_spend_limits' collection
+  source:
+    dataConnectorName: my_pg
+    dataConnectorCommand:
+      procedure: insert_category_spend_limits
+    argumentMapping:
+      objects: objects
+      postCheck: post_check
+  graphql:
+    rootFieldName: insertCategorySpendLimits
+    rootFieldKind: Mutation
+  description: Insert into the category_spend_limits table
+
+---
+kind: CommandPermissions
+version: v1
+definition:
+  commandName: InsertCategorySpendLimits
+  permissions:
+    - role: admin
+      allowExecution: true
+

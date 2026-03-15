@@ -22,6 +22,10 @@ definition:
       type: Uuid!
     - name: vendorName
       type: String_1!
+    - name: vendorTaxId
+      type: String_1
+    - name: vendorTaxIdValid
+      type: Boolean_1!
   graphql:
     typeName: Receipts
     inputTypeName: ReceiptsInput
@@ -56,6 +60,12 @@ definition:
         vendorName:
           column:
             name: vendor_name
+        vendorTaxId:
+          column:
+            name: vendor_tax_id
+        vendorTaxIdValid:
+          column:
+            name: vendor_tax_id_valid
 
 ---
 kind: TypePermissions
@@ -75,6 +85,8 @@ definition:
           - totalAmount
           - userId
           - vendorName
+          - vendorTaxId
+          - vendorTaxIdValid
 
 ---
 kind: BooleanExpressionType
@@ -103,6 +115,10 @@ definition:
           booleanExpressionType: UuidBoolExp
         - fieldName: vendorName
           booleanExpressionType: TextBoolExp
+        - fieldName: vendorTaxId
+          booleanExpressionType: TextBoolExp
+        - fieldName: vendorTaxIdValid
+          booleanExpressionType: BoolBoolExp
       comparableRelationships:
         - relationshipName: receiptItems
         - relationshipName: company
@@ -141,6 +157,10 @@ definition:
           aggregateExpression: UuidAggExp
         - fieldName: vendorName
           aggregateExpression: TextAggExp
+        - fieldName: vendorTaxId
+          aggregateExpression: TextAggExp
+        - fieldName: vendorTaxIdValid
+          aggregateExpression: BoolAggExp
   count:
     enable: true
     returnType: Int64
@@ -174,6 +194,10 @@ definition:
           orderByExpression: UuidOrderByExp
         - fieldName: vendorName
           orderByExpression: String1OrderByExp
+        - fieldName: vendorTaxId
+          orderByExpression: String1OrderByExp
+        - fieldName: vendorTaxIdValid
+          orderByExpression: Boolean1OrderByExp
       orderableRelationships:
         - relationshipName: company
         - relationshipName: user

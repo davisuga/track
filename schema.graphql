@@ -30,6 +30,49 @@ input BoolBoolExp {
 
 scalar Boolean1
 
+type CategorySpendLimits {
+  category: String1!
+  companyId: Uuid!
+  createdAt: Timestamptz
+  id: Uuid!
+  maxReceiptAmount: Bigdecimal!
+}
+
+type CategorySpendLimitsAggExp {
+  _count: Int64!
+  category: TextAggExp!
+  companyId: UuidAggExp!
+  createdAt: TimestamptzAggExp!
+  id: UuidAggExp!
+  maxReceiptAmount: NumericAggExp!
+}
+
+input CategorySpendLimitsBoolExp {
+  _and: [CategorySpendLimitsBoolExp!]
+  _not: CategorySpendLimitsBoolExp
+  _or: [CategorySpendLimitsBoolExp!]
+  category: TextBoolExp
+  companyId: UuidBoolExp
+  createdAt: TimestamptzBoolExp
+  id: UuidBoolExp
+  maxReceiptAmount: NumericBoolExp
+}
+
+input CategorySpendLimitsFilterInput {
+  limit: Int
+  offset: Int
+  order_by: [CategorySpendLimitsOrderByExp!]
+  where: CategorySpendLimitsBoolExp
+}
+
+input CategorySpendLimitsOrderByExp {
+  category: OrderBy
+  companyId: OrderBy
+  createdAt: OrderBy
+  id: OrderBy
+  maxReceiptAmount: OrderBy
+}
+
 type Companies {
   createdAt: Timestamptz
   id: Uuid!
@@ -136,6 +179,22 @@ type DeleteUsersByIdResponse {
 
 scalar Enum
 
+input InsertCategorySpendLimitsObjectInput {
+  category: String1!
+  companyId: Uuid!
+  createdAt: Timestamptz
+  id: Uuid
+  maxReceiptAmount: Bigdecimal!
+}
+
+"""Responses from the 'insert_category_spend_limits' procedure"""
+type InsertCategorySpendLimitsResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [CategorySpendLimits!]!
+}
+
 input InsertCompaniesObjectInput {
   createdAt: Timestamptz
   id: Uuid
@@ -180,6 +239,8 @@ input InsertReceiptsObjectInput {
   totalAmount: Bigdecimal!
   userId: Uuid!
   vendorName: String1!
+  vendorTaxId: String1
+  vendorTaxIdValid: Boolean1
 }
 
 """Responses from the 'insert_receipts' procedure"""
@@ -242,6 +303,14 @@ type Mutation {
     """Delete permission predicate over the 'users' collection"""
     preCheck: UsersBoolExp
   ): DeleteUsersByIdResponse!
+  """Insert into the category_spend_limits table"""
+  insertCategorySpendLimits(
+    objects: [InsertCategorySpendLimitsObjectInput!]!
+    """
+    Insert permission predicate over the 'category_spend_limits' collection
+    """
+    postCheck: CategorySpendLimitsBoolExp
+  ): InsertCategorySpendLimitsResponse!
   """Insert into the companies table"""
   insertCompanies(
     objects: [InsertCompaniesObjectInput!]!
@@ -266,6 +335,21 @@ type Mutation {
     """Insert permission predicate over the 'users' collection"""
     postCheck: UsersBoolExp
   ): InsertUsersResponse!
+  """
+  Update any row on the 'category_spend_limits' collection using the 'id' key
+  """
+  updateCategorySpendLimitsById(
+    keyId: Uuid!
+    """
+    Update permission post-condition predicate over the 'category_spend_limits' collection
+    """
+    postCheck: CategorySpendLimitsBoolExp
+    """
+    Update permission pre-condition predicate over the 'category_spend_limits' collection
+    """
+    preCheck: CategorySpendLimitsBoolExp
+    updateColumns: UpdateCategorySpendLimitsByIdUpdateColumnsInput!
+  ): UpdateCategorySpendLimitsByIdResponse!
   """Update any row on the 'companies' collection using the 'id' key"""
   updateCompaniesById(
     keyId: Uuid!
@@ -362,6 +446,10 @@ enum OrderBy {
 }
 
 type Query {
+  categorySpendLimits(limit: Int, offset: Int, order_by: [CategorySpendLimitsOrderByExp!], where: CategorySpendLimitsBoolExp): [CategorySpendLimits!]
+  categorySpendLimitsAggregate(filter_input: CategorySpendLimitsFilterInput): CategorySpendLimitsAggExp
+  categorySpendLimitsByCategorySpendLimitsCompanyIdCategoryKey(category: String1!, companyId: Uuid!): CategorySpendLimits
+  categorySpendLimitsById(id: Uuid!): CategorySpendLimits
   companies(limit: Int, offset: Int, order_by: [CompaniesOrderByExp!], where: CompaniesBoolExp): [Companies!]
   companiesAggregate(filter_input: CompaniesFilterInput): CompaniesAggExp
   companiesById(id: Uuid!): Companies
@@ -453,6 +541,8 @@ type Receipts {
   user: Users
   userId: Uuid!
   vendorName: String1!
+  vendorTaxId: String1
+  vendorTaxIdValid: Boolean1!
 }
 
 type ReceiptsAggExp {
@@ -466,6 +556,8 @@ type ReceiptsAggExp {
   totalAmount: NumericAggExp!
   userId: UuidAggExp!
   vendorName: TextAggExp!
+  vendorTaxId: TextAggExp!
+  vendorTaxIdValid: BoolAggExp!
 }
 
 input ReceiptsBoolExp {
@@ -484,6 +576,8 @@ input ReceiptsBoolExp {
   user: UsersBoolExp
   userId: UuidBoolExp
   vendorName: TextBoolExp
+  vendorTaxId: TextBoolExp
+  vendorTaxIdValid: BoolBoolExp
 }
 
 input ReceiptsFilterInput {
@@ -505,11 +599,17 @@ input ReceiptsOrderByExp {
   user: UsersOrderByExp
   userId: OrderBy
   vendorName: OrderBy
+  vendorTaxId: OrderBy
+  vendorTaxIdValid: OrderBy
 }
 
 scalar String1
 
 type Subscription {
+  categorySpendLimits(limit: Int, offset: Int, order_by: [CategorySpendLimitsOrderByExp!], where: CategorySpendLimitsBoolExp): [CategorySpendLimits!]
+  categorySpendLimitsAggregate(filter_input: CategorySpendLimitsFilterInput): CategorySpendLimitsAggExp
+  categorySpendLimitsByCategorySpendLimitsCompanyIdCategoryKey(category: String1!, companyId: Uuid!): CategorySpendLimits
+  categorySpendLimitsById(id: Uuid!): CategorySpendLimits
   companies(limit: Int, offset: Int, order_by: [CompaniesOrderByExp!], where: CompaniesBoolExp): [Companies!]
   companiesAggregate(filter_input: CompaniesFilterInput): CompaniesAggExp
   companiesById(id: Uuid!): Companies
@@ -577,6 +677,72 @@ input TimestamptzBoolExp {
   _neq: Timestamptz
   _not: TimestamptzBoolExp
   _or: [TimestamptzBoolExp!]
+}
+
+"""Responses from the 'update_category_spend_limits_by_id' procedure"""
+type UpdateCategorySpendLimitsByIdResponse {
+  """The number of rows affected by the mutation"""
+  affectedRows: Int32!
+  """Data from rows affected by the mutation"""
+  returning: [CategorySpendLimits!]!
+}
+
+"""Update the columns of the 'category_spend_limits' collection"""
+input UpdateCategorySpendLimitsByIdUpdateColumnsInput {
+  """
+  Update the 'category' column in the 'category_spend_limits' collection.
+  """
+  category: UpdateColumnCategorySpendLimitsCategoryInput
+  """
+  Update the 'company_id' column in the 'category_spend_limits' collection.
+  """
+  companyId: UpdateColumnCategorySpendLimitsCompanyIdInput
+  """
+  Update the 'created_at' column in the 'category_spend_limits' collection.
+  """
+  createdAt: UpdateColumnCategorySpendLimitsCreatedAtInput
+  """Update the 'id' column in the 'category_spend_limits' collection."""
+  id: UpdateColumnCategorySpendLimitsIdInput
+  """
+  Update the 'max_receipt_amount' column in the 'category_spend_limits' collection.
+  """
+  maxReceiptAmount: UpdateColumnCategorySpendLimitsMaxReceiptAmountInput
+}
+
+"""Update the 'category' column in the 'category_spend_limits' collection"""
+input UpdateColumnCategorySpendLimitsCategoryInput {
+  """Set the column to this value"""
+  set: String1!
+}
+
+"""
+Update the 'company_id' column in the 'category_spend_limits' collection
+"""
+input UpdateColumnCategorySpendLimitsCompanyIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""
+Update the 'created_at' column in the 'category_spend_limits' collection
+"""
+input UpdateColumnCategorySpendLimitsCreatedAtInput {
+  """Set the column to this value"""
+  set: Timestamptz
+}
+
+"""Update the 'id' column in the 'category_spend_limits' collection"""
+input UpdateColumnCategorySpendLimitsIdInput {
+  """Set the column to this value"""
+  set: Uuid!
+}
+
+"""
+Update the 'max_receipt_amount' column in the 'category_spend_limits' collection
+"""
+input UpdateColumnCategorySpendLimitsMaxReceiptAmountInput {
+  """Set the column to this value"""
+  set: Bigdecimal!
 }
 
 """Update the 'created_at' column in the 'companies' collection"""
@@ -705,6 +871,18 @@ input UpdateColumnReceiptsVendorNameInput {
   set: String1!
 }
 
+"""Update the 'vendor_tax_id' column in the 'receipts' collection"""
+input UpdateColumnReceiptsVendorTaxIdInput {
+  """Set the column to this value"""
+  set: String1
+}
+
+"""Update the 'vendor_tax_id_valid' column in the 'receipts' collection"""
+input UpdateColumnReceiptsVendorTaxIdValidInput {
+  """Set the column to this value"""
+  set: Boolean1!
+}
+
 """Update the 'company_id' column in the 'users' collection"""
 input UpdateColumnUsersCompanyIdInput {
   """Set the column to this value"""
@@ -819,6 +997,10 @@ input UpdateReceiptsByIdUpdateColumnsInput {
   userId: UpdateColumnReceiptsUserIdInput
   """Update the 'vendor_name' column in the 'receipts' collection."""
   vendorName: UpdateColumnReceiptsVendorNameInput
+  """Update the 'vendor_tax_id' column in the 'receipts' collection."""
+  vendorTaxId: UpdateColumnReceiptsVendorTaxIdInput
+  """Update the 'vendor_tax_id_valid' column in the 'receipts' collection."""
+  vendorTaxIdValid: UpdateColumnReceiptsVendorTaxIdValidInput
 }
 
 """Responses from the 'update_users_by_email' procedure"""
