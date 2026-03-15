@@ -1,5 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router"
-import { LayoutDashboard, Receipt, ScanLine } from "lucide-react"
+import {
+  LayoutDashboard,
+  Receipt,
+  ReceiptText,
+  ScanLine,
+  Users,
+} from "lucide-react"
 import { useTranslation } from "react-i18next"
 
 import {
@@ -19,7 +25,7 @@ type NavigationItem = {
   icon: typeof LayoutDashboard
   isActive: boolean
   label: string
-  to: "/" | "/scan"
+  to: "/" | "/scan" | "/receitas" | "/funcionarios"
 }
 
 export function AppSidebar() {
@@ -40,6 +46,18 @@ export function AppSidebar() {
       isActive: pathname.startsWith("/scan"),
       label: t("app.nav.capture"),
       to: "/scan",
+    },
+    {
+      icon: ReceiptText,
+      isActive: pathname.startsWith("/receitas"),
+      label: t("app.nav.receipts"),
+      to: "/receitas",
+    },
+    {
+      icon: Users,
+      isActive: pathname.startsWith("/funcionarios"),
+      label: t("app.nav.employees"),
+      to: "/funcionarios",
     },
   ]
 

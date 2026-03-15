@@ -34,6 +34,8 @@ const resources = {
         nav: {
           capture: "Captura",
           dashboard: "Painel",
+          receipts: "Receitas",
+          employees: "Funcionários",
         },
         sidebar: {
           description: "Capture recibos e acompanhe os gastos em tempo real.",
@@ -62,6 +64,17 @@ const resources = {
         heroTitle: "Visibilidade e controle",
         heroDescription:
           "Acompanhe gastos por pessoa, produto, categoria e período para entender exatamente para onde o dinheiro está indo.",
+        pages: {
+          dashboardTitle: "Painel de controle",
+          dashboardDescription:
+            "Comece pelos alertas e depois valide o panorama de gasto por período, produto e categoria.",
+          receiptsTitle: "Receitas e auditoria",
+          receiptsDescription:
+            "Pesquise, filtre e abra qualquer recibo para conferir a imagem original e os itens extraídos.",
+          employeesTitle: "Funcionários e responsabilidade",
+          employeesDescription:
+            "Veja quem gastou mais, quantos recibos enviou e quais pessoas concentram mais alertas.",
+        },
         summary: {
           totalSpent: "Total gasto",
           receiptsProcessed: "Recibos processados",

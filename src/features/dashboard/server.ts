@@ -10,7 +10,97 @@ import { createSignedReceiptReadUrl } from "@/lib/r2"
 
 const dashboardPeriodSchema = z.enum(["7d", "30d", "90d", "all"])
 
-type DashboardPeriod = z.infer<typeof dashboardPeriodSchema>
+export type DashboardPeriod = z.infer<typeof dashboardPeriodSchema>
+
+export type DashboardAlert = {
+  id: string
+  metric: string
+  priority: number
+  text: string
+  userIds: Array<string>
+}
+
+export type DashboardCategoryRow = {
+  key: string
+  label: string
+  ratio: number
+  total: number
+}
+
+export type DashboardReceiptRow = {
+  createdAt: string | null
+  id: string
+  itemCount: number
+  primaryCategory: string
+  primaryCategoryKey: string
+  receiptDate: string
+  totalAmount: number
+  userId: string
+  userName: string
+  vendorName: string
+}
+
+export type DashboardEmployeeRow = {
+  alertCount: number
+  receiptCount: number
+  receipts: Array<DashboardReceiptRow>
+  topCategory: string
+  totalSpent: number
+  userId: string
+  userName: string
+}
+
+export type DashboardProductRow = {
+  employeeCount: number
+  name: string
+  purchaseCount: number
+  totalQuantity: number
+  totalSpent: number
+}
+
+export type DashboardSummary = {
+  receiptsProcessed: number
+  totalSpent: number
+  uniqueEmployees: number
+  uniqueProducts: number
+}
+
+export type DashboardSnapshot = {
+  alerts: Array<DashboardAlert>
+  categories: Array<DashboardCategoryRow>
+  employees: Array<DashboardEmployeeRow>
+  receipts: Array<DashboardReceiptRow>
+  products: Array<DashboardProductRow>
+  summary: DashboardSummary
+}
+
+export type DashboardReceiptDetail = {
+  createdAt: string | null
+  id: string
+  imageRef: string | null
+  items: Array<{
+    category: string
+    description: string
+    id: string
+    quantity: number
+    rawDescription: string
+    totalPrice: number
+    unitPrice: number
+  }>
+  receiptDate: string
+  status: string | null
+  totalAmount: number
+  userId: string
+  userName: string
+  vendorName: string
+  vendorTaxId: string
+  vendorTaxIdValid: boolean
+}
+
+export type DashboardReceiptDetailResult = {
+  receipt: DashboardReceiptDetail
+  signedImageUrl: string | null
+}
 
 type CompanyContextQuery = {
   users?: Array<{
