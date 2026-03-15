@@ -21,6 +21,7 @@ import type {
 } from "@/features/dashboard/server"
 import { DASHBOARD_PERIODS } from "@/features/dashboard/model"
 import { Card } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
   currencyFormatter,
   dateFormatter,
@@ -38,6 +39,69 @@ export const categoryToneClasses = [
   "bg-[#5DCAA5]",
   "bg-[#BDE8D8]",
 ] as const
+
+const ALERT_TYPE_ORDER = [
+  "policy_exceeded",
+  "policy_monthly_exceeded",
+  "tax_invalid",
+  "duplicate_receipts",
+  "personal_purchase",
+  "bulk_buying",
+  "price_range",
+] as const
+
+function getAlertTypeLabel(
+  alertType: string,
+  t: ReturnType<typeof useTranslation>["t"]
+) {
+  switch (alertType) {
+    case "policy_exceeded":
+      return t("dashboard.alerts.groups.policyExceeded")
+    case "policy_monthly_exceeded":
+      return t("dashboard.alerts.groups.policyMonthlyExceeded")
+    case "tax_invalid":
+      return t("dashboard.alerts.groups.taxInvalid")
+    case "duplicate_receipts":
+      return t("dashboard.alerts.groups.duplicateReceipts")
+    case "personal_purchase":
+      return t("dashboard.alerts.groups.personalPurchase")
+    case "bulk_buying":
+      return t("dashboard.alerts.groups.bulkBuying")
+    case "price_range":
+      return t("dashboard.alerts.groups.priceRange")
+    default:
+      return t("dashboard.labels.other")
+  }
+}
+
+function DashboardAlertCard({
+  alert,
+  onDismiss,
+}: {
+  alert: DashboardAlert
+  onDismiss: (alertId: string) => void
+}) {
+  return (
+    <div className="flex items-start gap-3 rounded-[24px] border border-border/60 bg-bg-base/70 px-4 py-4">
+      <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bg-surface shadow-soft">
+        <ShieldAlert size={18} />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-sm font-semibold tracking-[0.12em] text-text-secondary uppercase">
+          {alert.metric}
+        </p>
+        <p className="mt-1 leading-6">{alert.text}</p>
+      </div>
+      <button
+        className="rounded-full p-2 text-text-secondary transition hover:bg-bg-surface hover:text-text-primary"
+        onClick={() => onDismiss(alert.id)}
+        type="button"
+      >
+        <X size={16} />
+      </button>
+    </div>
+  )
+}
 
 export function DashboardLoadingState() {
   const { t } = useTranslation()
@@ -216,45 +280,111 @@ export function DashboardAlertsList({
   onDismiss: (alertId: string) => void
 }) {
   const { t } = useTranslation()
-  const visibleAlerts = alerts
-    .filter(
-      (alert) =>
-        !dismissedAlertIds.includes(alert.id) &&
-        alert.metric.trim() &&
-        alert.text.trim()
-    )
-    .slice(0, 8)
+  const filteredAlerts = React.useMemo(
+    () =>
+      alerts.filter(
+        (alert) =>
+          !dismissedAlertIds.includes(alert.id) &&
+          alert.metric.trim() &&
+          alert.text.trim()
+      ),
+    [alerts, dismissedAlertIds]
+  )
 
-  if (!visibleAlerts.length) {
+  const alertGroups = React.useMemo(() => {
+    const orderedGroups = ALERT_TYPE_ORDER.map((alertType) => {
+      const groupAlerts = filteredAlerts
+        .filter((alert) => alert.alertType === alertType)
+        .slice(0, 8)
+
+      return {
+        alerts: groupAlerts,
+        label: getAlertTypeLabel(alertType, t),
+        value: alertType,
+      }
+    }).filter((group) => group.alerts.length > 0)
+
+    const additionalGroups = [
+      ...new Set(filteredAlerts.map((alert) => alert.alertType)),
+    ]
+      .filter(
+        (alertType) =>
+          !ALERT_TYPE_ORDER.includes(
+            alertType as (typeof ALERT_TYPE_ORDER)[number]
+          )
+      )
+      .map((alertType) => ({
+        alerts: filteredAlerts
+          .filter((alert) => alert.alertType === alertType)
+          .slice(0, 8),
+        label: getAlertTypeLabel(alertType, t),
+        value: alertType,
+      }))
+      .filter((group) => group.alerts.length > 0)
+
+    return [
+      {
+        alerts: filteredAlerts.slice(0, 8),
+        label: t("dashboard.alerts.groups.all"),
+        value: "all",
+      },
+      ...orderedGroups,
+      ...additionalGroups,
+    ]
+  }, [filteredAlerts, t])
+
+  const [selectedGroup, setSelectedGroup] = React.useState("all")
+
+  React.useEffect(() => {
+    if (!alertGroups.some((group) => group.value === selectedGroup)) {
+      setSelectedGroup(alertGroups[0]?.value ?? "all")
+    }
+  }, [alertGroups, selectedGroup])
+
+  if (!filteredAlerts.length) {
     return <EmptyState message={t("dashboard.sections.alerts.empty")} />
   }
 
   return (
-    <div className="space-y-2">
-      {visibleAlerts.map((alert) => (
-        <div
-          key={alert.id}
-          className="flex items-start gap-3 rounded-[24px] border border-border/60 bg-bg-base/70 px-4 py-4"
-        >
-          <div className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-bg-surface shadow-soft">
-            <ShieldAlert size={18} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-sm font-semibold tracking-[0.12em] text-text-secondary uppercase">
-              {alert.metric}
-            </p>
-            <p className="mt-1 leading-6">{alert.text}</p>
-          </div>
-          <button
-            className="rounded-full p-2 text-text-secondary transition hover:bg-bg-surface hover:text-text-primary"
-            onClick={() => onDismiss(alert.id)}
-            type="button"
+    <Tabs
+      className="flex-col gap-4"
+      onValueChange={(value) => setSelectedGroup(String(value))}
+      value={selectedGroup}
+    >
+      <TabsList
+        className="flex h-auto w-full flex-wrap justify-start gap-2 rounded-none bg-transparent p-0"
+        variant="line"
+      >
+        {alertGroups.map((group) => (
+          <TabsTrigger
+            key={group.value}
+            className="h-auto flex-none rounded-full border border-border/70 bg-bg-base px-4 py-2 font-display text-sm font-semibold text-text-secondary shadow-none after:hidden hover:border-border hover:bg-bg-surface hover:text-text-primary data-active:!border-bg-inverse data-active:!bg-bg-inverse data-active:!text-text-inverse data-active:shadow-soft"
+            value={group.value}
           >
-            <X size={16} />
-          </button>
-        </div>
+            <span className="leading-none">{group.label}</span>
+            <span className="text-[11px] leading-none opacity-70">
+              {numberFormatter.format(group.alerts.length)}
+            </span>
+          </TabsTrigger>
+        ))}
+      </TabsList>
+
+      {alertGroups.map((group) => (
+        <TabsContent
+          key={group.value}
+          className="w-full space-y-2"
+          value={group.value}
+        >
+          {group.alerts.map((alert) => (
+            <DashboardAlertCard
+              key={alert.id}
+              alert={alert}
+              onDismiss={onDismiss}
+            />
+          ))}
+        </TabsContent>
       ))}
-    </div>
+    </Tabs>
   )
 }
 

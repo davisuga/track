@@ -189,6 +189,16 @@ const resources = {
           each: "cada",
         },
         alerts: {
+          groups: {
+            all: "Todos",
+            bulkBuying: "Compras fragmentadas",
+            duplicateReceipts: "Duplicados",
+            personalPurchase: "Despesa pessoal",
+            policyExceeded: "Política",
+            policyMonthlyExceeded: "Política mensal",
+            priceRange: "Preço",
+            taxInvalid: "CNPJ",
+          },
           metrics: {
             missingId: "Sem ID",
             overLimit: "{{percent}}% acima",

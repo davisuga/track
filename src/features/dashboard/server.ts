@@ -13,6 +13,7 @@ const dashboardPeriodSchema = z.enum(["7d", "30d", "90d", "all"])
 export type DashboardPeriod = z.infer<typeof dashboardPeriodSchema>
 
 export type DashboardAlert = {
+  alertType: string
   id: string
   metric: string
   priority: number
@@ -436,6 +437,7 @@ function groupAlerts(
   const groupedAlerts = new Map<
     string,
     {
+      alertType: string
       id: string
       metric: string
       priority: number
@@ -465,6 +467,7 @@ function groupAlerts(
     }
 
     groupedAlerts.set(alert.alertId, {
+      alertType: alert.alertType,
       id: alert.alertId,
       metric: formattedAlert.metric,
       priority: toNumber(alert.priority),
