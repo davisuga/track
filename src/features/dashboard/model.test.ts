@@ -1,8 +1,9 @@
 import { describe, expect, it } from "vitest"
 
+import type {DashboardBootstrap} from "@/features/dashboard/model";
 import {
-  buildDashboardView,
-  type DashboardBootstrap,
+  
+  buildDashboardView
 } from "@/features/dashboard/model"
 
 const companyId = "company-1"

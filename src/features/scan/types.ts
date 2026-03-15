@@ -106,7 +106,7 @@ export function createEmptyReceiptDraft() {
     vendorTaxId: "",
     receiptDate: getTodayDate(),
     totalAmount: 0,
-    items: [] satisfies EditableReceiptItem[],
+    items: [] satisfies Array<EditableReceiptItem>,
   }
 }
 

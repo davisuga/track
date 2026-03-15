@@ -37,7 +37,7 @@ export type DashboardReceipt = {
   createdAt: string | null
   id: string
   imageRef: string | null
-  items: DashboardReceiptItem[]
+  items: Array<DashboardReceiptItem>
   receiptDate: string
   status: string | null
   totalAmount: number
@@ -52,9 +52,9 @@ export type DashboardReceipt = {
 
 export type DashboardBootstrap = {
   companyId: string | null
-  policyLimits: DashboardPolicyLimit[]
-  receipts: DashboardReceipt[]
-  users: DashboardUser[]
+  policyLimits: Array<DashboardPolicyLimit>
+  receipts: Array<DashboardReceipt>
+  users: Array<DashboardUser>
 }
 
 export type DashboardAlert = {
@@ -62,7 +62,7 @@ export type DashboardAlert = {
   metric: string
   priority: number
   text: string
-  userIds: string[]
+  userIds: Array<string>
 }
 
 export type DashboardCategoryBreakdown = {
@@ -75,7 +75,7 @@ export type DashboardCategoryBreakdown = {
 export type DashboardEmployeeSpend = {
   alertCount: number
   receiptCount: number
-  receipts: DashboardReceipt[]
+  receipts: Array<DashboardReceipt>
   topCategory: string
   totalSpent: number
   userId: string
@@ -99,12 +99,12 @@ export type DashboardProductRow = {
 }
 
 export type DashboardView = {
-  alerts: DashboardAlert[]
-  categories: DashboardCategoryBreakdown[]
-  employees: DashboardEmployeeSpend[]
-  filteredReceipts: DashboardReceipt[]
-  policyRows: DashboardPolicyRow[]
-  products: DashboardProductRow[]
+  alerts: Array<DashboardAlert>
+  categories: Array<DashboardCategoryBreakdown>
+  employees: Array<DashboardEmployeeSpend>
+  filteredReceipts: Array<DashboardReceipt>
+  policyRows: Array<DashboardPolicyRow>
+  products: Array<DashboardProductRow>
   summary: {
     receiptsProcessed: number
     totalSpent: number
@@ -161,7 +161,7 @@ const PERIOD_LENGTHS: Record<Exclude<DashboardPeriod, "all">, number> = {
 
 const CATEGORY_KEYWORDS: Array<{
   key: DashboardCategoryKey
-  keywords: string[]
+  keywords: Array<string>
 }> = [
   {
     key: "food",
@@ -375,10 +375,10 @@ export function getPrimaryReceiptCategoryKey(
     return "other"
   }
 
-  return rankedCategories[0]![0]
+  return rankedCategories[0][0]
 }
 
-function getTopCategory(receipts: DashboardReceipt[]) {
+function getTopCategory(receipts: Array<DashboardReceipt>) {
   const categoryTotals = new Map<DashboardCategoryKey, number>()
 
   for (const receipt of receipts) {
@@ -399,7 +399,7 @@ function getTopCategory(receipts: DashboardReceipt[]) {
     return i18n.t("dashboard.labels.other")
   }
 
-  return getCategoryLabel(rankedCategories[0]![0])
+  return getCategoryLabel(rankedCategories[0][0])
 }
 
 function isLikelyPersonalItem(item: DashboardReceiptItem) {
@@ -418,11 +418,11 @@ function getReceiptCategoryTotals(receipt: DashboardReceipt) {
   return totals
 }
 
-function getPolicyMap(policyLimits: DashboardPolicyLimit[]) {
+function getPolicyMap(policyLimits: Array<DashboardPolicyLimit>) {
   return new Map(policyLimits.map((policy) => [policy.category, policy]))
 }
 
-function getMedian(values: number[]) {
+function getMedian(values: Array<number>) {
   if (!values.length) {
     return null
   }
@@ -431,13 +431,13 @@ function getMedian(values: number[]) {
   const middleIndex = Math.floor(sortedValues.length / 2)
 
   if (sortedValues.length % 2 === 0) {
-    return (sortedValues[middleIndex - 1]! + sortedValues[middleIndex]!) / 2
+    return (sortedValues[middleIndex - 1] + sortedValues[middleIndex]) / 2
   }
 
-  return sortedValues[middleIndex]!
+  return sortedValues[middleIndex]
 }
 
-function buildProductAggregates(receipts: DashboardReceipt[]) {
+function buildProductAggregates(receipts: Array<DashboardReceipt>) {
   const productMap = new Map<string, ProductAggregate>()
 
   for (const receipt of receipts) {
@@ -485,7 +485,7 @@ function buildProductAggregates(receipts: DashboardReceipt[]) {
   return productMap
 }
 
-function buildEmployees(filteredReceipts: DashboardReceipt[]) {
+function buildEmployees(filteredReceipts: Array<DashboardReceipt>) {
   return [
     ...new Map(
       filteredReceipts.map((receipt) => [receipt.userId, receipt.userName])
@@ -512,8 +512,8 @@ function buildEmployees(filteredReceipts: DashboardReceipt[]) {
 }
 
 function buildPolicyRows(
-  filteredReceipts: DashboardReceipt[],
-  policyLimits: DashboardPolicyLimit[]
+  filteredReceipts: Array<DashboardReceipt>,
+  policyLimits: Array<DashboardPolicyLimit>
 ) {
   const policyMap = getPolicyMap(policyLimits)
 
@@ -548,14 +548,14 @@ function buildPolicyRows(
 }
 
 function buildAlerts(input: {
-  employees: DashboardEmployeeSpend[]
-  filteredReceipts: DashboardReceipt[]
-  policyLimits: DashboardPolicyLimit[]
+  employees: Array<DashboardEmployeeSpend>
+  filteredReceipts: Array<DashboardReceipt>
+  policyLimits: Array<DashboardPolicyLimit>
   productMap: Map<string, ProductAggregate>
 }) {
-  const alerts: DashboardAlert[] = []
+  const alerts: Array<DashboardAlert> = []
   const policyMap = getPolicyMap(input.policyLimits)
-  const duplicateGroups = new Map<string, DashboardReceipt[]>()
+  const duplicateGroups = new Map<string, Array<DashboardReceipt>>()
 
   for (const receipt of input.filteredReceipts) {
     const duplicateKey = `${normalizeText(receipt.vendorName)}::${receipt.totalAmount.toFixed(2)}`
@@ -667,7 +667,7 @@ function buildAlerts(input: {
 
     const newestReceipt = [...group].sort((left, right) =>
       right.receiptDate.localeCompare(left.receiptDate)
-    )[0]!
+    )[0]
 
     alerts.push({
       id: `duplicate:${normalizeText(newestReceipt.vendorName)}:${newestReceipt.totalAmount.toFixed(2)}`,

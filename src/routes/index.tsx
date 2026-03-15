@@ -1,16 +1,16 @@
 import * as React from "react"
 import {
+  
+  
+  
+  
+  
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
-  type Column,
-  type ColumnDef,
-  type ColumnFiltersState,
-  type PaginationState,
-  type SortingState,
+  useReactTable
 } from "@tanstack/react-table"
 import { Link, createFileRoute } from "@tanstack/react-router"
 import { useQuery } from "@tanstack/react-query"
@@ -22,19 +22,21 @@ import {
   Loader2,
   Package,
   ReceiptText,
-  Search,
   ScanLine,
+  Search,
   ShieldAlert,
   Users,
   X,
 } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
+import type {Column, ColumnDef, ColumnFiltersState, PaginationState, SortingState} from "@tanstack/react-table";
 
+import type {DashboardPeriod} from "@/features/dashboard/model";
 import { Card } from "@/components/ui/card"
 import {
   DASHBOARD_CATEGORY_OPTIONS,
-  DASHBOARD_PERIODS,
-  type DashboardPeriod,
+  DASHBOARD_PERIODS
+  
 } from "@/features/dashboard/model"
 import {
   getDashboardSnapshot,
@@ -75,7 +77,7 @@ function DashboardRoute() {
   const [selectedReceiptId, setSelectedReceiptId] = React.useState<
     string | null
   >(null)
-  const [dismissedAlertIds, setDismissedAlertIds] = React.useState<string[]>([])
+  const [dismissedAlertIds, setDismissedAlertIds] = React.useState<Array<string>>([])
 
   const dashboardQuery = useQuery({
     queryKey: [...dashboardQueryKey, period],
@@ -804,7 +806,7 @@ function EmployeeSpendTable({
     pageSize: 8,
   })
 
-  const rows = React.useMemo<EmployeeSpendRow[]>(
+  const rows = React.useMemo<Array<EmployeeSpendRow>>(
     () =>
       employees.map((employee) => ({
         alertCount: employee.alertCount,
@@ -817,7 +819,7 @@ function EmployeeSpendTable({
     [employees]
   )
 
-  const columns = React.useMemo<ColumnDef<EmployeeSpendRow>[]>(
+  const columns = React.useMemo<Array<ColumnDef<EmployeeSpendRow>>>(
     () => [
       {
         accessorKey: "userName",
@@ -1080,7 +1082,7 @@ function ReceiptHistoryTable({
     pageSize: 10,
   })
 
-  const rows = React.useMemo<ReceiptHistoryRow[]>(
+  const rows = React.useMemo<Array<ReceiptHistoryRow>>(
     () =>
       receipts.map((receipt) => {
         return {
@@ -1098,7 +1100,7 @@ function ReceiptHistoryTable({
     [receipts]
   )
 
-  const columns = React.useMemo<ColumnDef<ReceiptHistoryRow>[]>(
+  const columns = React.useMemo<Array<ColumnDef<ReceiptHistoryRow>>>(
     () => [
       {
         accessorKey: "receiptCode",

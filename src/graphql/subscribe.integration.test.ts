@@ -1,7 +1,7 @@
 import { afterAll, describe, expect, it } from "vitest"
 
-import { getGraphqlAuthHeaders } from "@/graphql/auth"
 import type { TypedDocumentString } from "@/graphql/graphql"
+import { getGraphqlAuthHeaders } from "@/graphql/auth"
 import { subscribe } from "@/graphql/subscribe"
 
 const seededUserId = "22222222-2222-2222-2222-222222222221"
@@ -12,7 +12,7 @@ type GraphQlResponse<T> = {
   errors?: Array<{ message?: string }>
 }
 
-const createdReceiptIds: string[] = []
+const createdReceiptIds: Array<string> = []
 
 async function postGraphQl<TData>(
   query: string,
@@ -114,7 +114,7 @@ describe("GraphQL subscriptions", () => {
     const receiptId = insertedReceipt.insertReceipts.returning[0]?.id
 
     expect(receiptId).toBeDefined()
-    createdReceiptIds.push(receiptId!)
+    createdReceiptIds.push(receiptId)
 
     const ReceiptSubscriptionDocument = `
         subscription ReceiptSubscription($id: Uuid!) {
@@ -147,7 +147,7 @@ describe("GraphQL subscriptions", () => {
 
       const unsubscribe = subscribe(
         ReceiptSubscriptionDocument,
-        { id: receiptId! },
+        { id: receiptId },
         {
           next: (payload) => {
             const receipt = payload.data?.receiptsById

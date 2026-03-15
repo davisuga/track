@@ -18,6 +18,7 @@ import {
 } from "lucide-react"
 import { AnimatePresence, motion } from "motion/react"
 
+import type {AnalyzedReceiptDraft, EditableReceiptDraft} from "@/features/scan/types";
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -28,11 +29,11 @@ import {
   streamReceiptParsingStatus,
 } from "@/features/scan/server"
 import {
+  
+  
   createEmptyReceiptDraft,
   createEmptyReceiptItem,
-  toEditableReceiptDraft,
-  type AnalyzedReceiptDraft,
-  type EditableReceiptDraft,
+  toEditableReceiptDraft
 } from "@/features/scan/types"
 import {
   SUPPORTED_RECEIPT_MIME_TYPES,

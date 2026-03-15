@@ -1,10 +1,10 @@
 import * as z from "zod"
 import { createServerFn } from "@tanstack/react-start"
 
+import type { TypedDocumentString } from "@/graphql/graphql"
 import { DASHBOARD_CATEGORY_OPTIONS } from "@/features/dashboard/model"
 import { graphQlUuidSchema } from "@/features/scan/types"
 import { execute } from "@/graphql/execute"
-import type { TypedDocumentString } from "@/graphql/graphql"
 import i18n, { preciseCurrencyFormatter } from "@/lib/i18n"
 import { createSignedReceiptReadUrl } from "@/lib/r2"
 
@@ -361,7 +361,7 @@ function groupAlerts(
       metric: string
       priority: number
       text: string
-      userIds: string[]
+      userIds: Array<string>
     }
   >()
 

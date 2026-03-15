@@ -10,9 +10,9 @@ type GraphQlResponse<T> = {
   errors?: Array<{ message?: string }>
 }
 
-const createdCompanyIds: string[] = []
-const createdReceiptItemIds: string[] = []
-const createdReceiptIds: string[] = []
+const createdCompanyIds: Array<string> = []
+const createdReceiptItemIds: Array<string> = []
+const createdReceiptIds: Array<string> = []
 
 async function postGraphQl<TData>(
   query: string,
@@ -135,7 +135,7 @@ describe("dashboard GraphQL integration", () => {
 
     const company = insertedCompany.insertCompanies.returning[0]
     expect(company).toBeDefined()
-    createdCompanyIds.push(company!.id)
+    createdCompanyIds.push(company.id)
 
     const insertedPolicy = await postGraphQl<{
       insertSpendPolicies: {
@@ -165,7 +165,7 @@ describe("dashboard GraphQL integration", () => {
         objects: [
           {
             category: "food",
-            companyId: company!.id,
+            companyId: company.id,
             maxPerMonth: "250.00",
             maxPerTransaction: "88.00",
           },
@@ -276,7 +276,7 @@ describe("dashboard GraphQL integration", () => {
       vendorTaxId: null,
       vendorTaxIdValid: false,
     })
-    createdReceiptIds.push(receipt!.id)
+    createdReceiptIds.push(receipt.id)
 
     const insertedItem = await postGraphQl<{
       insertReceiptItems: {
@@ -307,7 +307,7 @@ describe("dashboard GraphQL integration", () => {
             normalizedDescription: "Arroz 5kg",
             quantity: "1.00",
             rawDescription: "ARROZ TIPO 1 5KG",
-            receiptId: receipt!.id,
+            receiptId: receipt.id,
             totalPrice: "42.50",
             unitPrice: "42.50",
           },
@@ -315,7 +315,7 @@ describe("dashboard GraphQL integration", () => {
       }
     )
 
-    createdReceiptItemIds.push(insertedItem.insertReceiptItems.returning[0]!.id)
+    createdReceiptItemIds.push(insertedItem.insertReceiptItems.returning[0].id)
     expect(insertedItem.insertReceiptItems.returning[0]).toMatchObject({
       normalizedDescription: "Arroz 5kg",
       rawDescription: "ARROZ TIPO 1 5KG",

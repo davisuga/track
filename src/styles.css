@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -9,11 +9,11 @@
   --color-bg-base: var(--theme-bg-base);
   --color-bg-surface: var(--theme-bg-surface);
   --color-bg-inverse: var(--theme-bg-inverse);
-  
+
   --color-text-primary: var(--theme-text-primary);
   --color-text-secondary: var(--theme-text-secondary);
   --color-text-inverse: var(--theme-text-inverse);
-  
+
   --color-accent: var(--theme-accent);
   --color-accent-fg: var(--theme-accent-fg);
   --color-success: var(--theme-success);
@@ -28,25 +28,32 @@
 
   --shadow-soft: var(--theme-shadow-soft);
   --shadow-floating: var(--theme-shadow-floating);
+
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
 }
 
 :root {
   /* =========================================
      THEME: MODERN ENTERPRISE (Friendly & Soft)
      ========================================= */
-  --theme-bg-base: #F2F2F7;
-  --theme-bg-surface: #FFFFFF;
-  --theme-bg-inverse: #1C1C1E;
-  
-  --theme-text-primary: #1C1C1E;
-  --theme-text-secondary: #8E8E93;
-  --theme-text-inverse: #FFFFFF;
-  
-  --theme-accent: #1C1C1E;
-  --theme-accent-fg: #FFFFFF;
-  --theme-success: #34C759;
-  --theme-danger: #FF3B30;
-  --theme-border: #E5E5EA;
+  --theme-bg-base: #f2f2f7;
+  --theme-bg-surface: #ffffff;
+  --theme-bg-inverse: #1c1c1e;
+
+  --theme-text-primary: #1c1c1e;
+  --theme-text-secondary: #8e8e93;
+  --theme-text-inverse: #ffffff;
+
+  --theme-accent: #1c1c1e;
+  --theme-accent-fg: #ffffff;
+  --theme-success: #34c759;
+  --theme-danger: #ff3b30;
+  --theme-border: #e5e5ea;
 
   --theme-radius-sm: 12px;
   --theme-radius-md: 16px;
@@ -60,6 +67,13 @@
   --font-sans-var: "Inter", system-ui, sans-serif;
   --font-display-var: "Plus Jakarta Sans", system-ui, sans-serif;
   --font-mono-var: "JetBrains Mono", monospace;
+
+  --sidebar: 220 18% 95%;
+  --sidebar-foreground: 240 6% 12%;
+  --sidebar-border: 220 14% 86%;
+  --sidebar-accent: 0 0% 100%;
+  --sidebar-accent-foreground: 240 6% 12%;
+  --sidebar-ring: 220 14% 72%;
 }
 
 /* 
@@ -130,7 +144,12 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-display-var);
     letter-spacing: -0.02em;
   }

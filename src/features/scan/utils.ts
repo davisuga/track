@@ -127,9 +127,9 @@ export function toErrorMessage(error: unknown, fallback: string) {
   return fallback
 }
 
-function calculateCheckDigit(digits: number[], weights: number[]) {
+function calculateCheckDigit(digits: Array<number>, weights: Array<number>) {
   const sum = digits.reduce((accumulator, digit, index) => {
-    return accumulator + digit * weights[index]!
+    return accumulator + digit * weights[index]
   }, 0)
   const remainder = sum % 11
 

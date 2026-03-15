@@ -1,7 +1,8 @@
-import { createClient, type FormattedExecutionResult, type Sink } from "graphql-ws"
+import {   createClient } from "graphql-ws"
 import WebSocket from "ws"
 
 import { getGraphqlAuthHeaders } from "./auth"
+import type {FormattedExecutionResult, Sink} from "graphql-ws";
 import type { TypedDocumentString } from "./graphql"
 
 function getGraphqlSubscriptionUrl() {

@@ -1,5 +1,5 @@
-import type { TypedDocumentString } from "./graphql"
 import { getGraphqlAuthHeaders } from "./auth"
+import type { TypedDocumentString } from "./graphql"
 
 export async function execute<TResult, TVariables>(
   query: TypedDocumentString<TResult, TVariables>,

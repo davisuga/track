@@ -35,6 +35,11 @@ const resources = {
           capture: "Captura",
           dashboard: "Painel",
         },
+        sidebar: {
+          description: "Capture recibos e acompanhe os gastos em tempo real.",
+          navigation: "Navegação",
+          open: "Abrir navegação",
+        },
       },
       dashboard: {
         periods: {
