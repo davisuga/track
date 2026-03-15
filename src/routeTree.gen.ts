@@ -13,6 +13,7 @@ import { Route as ScanRouteImport } from './routes/scan'
 import { Route as ReceitasRouteImport } from './routes/receitas'
 import { Route as FuncionariosRouteImport } from './routes/funcionarios'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ScanIndexRouteImport } from './routes/scan.index'
 import { Route as ScanRevisarReceiptIdRouteImport } from './routes/scan.revisar.$receiptId'
 import { Route as ScanProcessandoReceiptIdRouteImport } from './routes/scan.processando.$receiptId'
 
@@ -36,6 +37,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ScanIndexRoute = ScanIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ScanRoute,
+} as any)
 const ScanRevisarReceiptIdRoute = ScanRevisarReceiptIdRouteImport.update({
   id: '/revisar/$receiptId',
   path: '/revisar/$receiptId',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/funcionarios': typeof FuncionariosRoute
   '/receitas': typeof ReceitasRoute
   '/scan': typeof ScanRouteWithChildren
+  '/scan/': typeof ScanIndexRoute
   '/scan/processando/$receiptId': typeof ScanProcessandoReceiptIdRoute
   '/scan/revisar/$receiptId': typeof ScanRevisarReceiptIdRoute
 }
@@ -60,7 +67,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/funcionarios': typeof FuncionariosRoute
   '/receitas': typeof ReceitasRoute
-  '/scan': typeof ScanRouteWithChildren
+  '/scan': typeof ScanIndexRoute
   '/scan/processando/$receiptId': typeof ScanProcessandoReceiptIdRoute
   '/scan/revisar/$receiptId': typeof ScanRevisarReceiptIdRoute
 }
@@ -70,6 +77,7 @@ export interface FileRoutesById {
   '/funcionarios': typeof FuncionariosRoute
   '/receitas': typeof ReceitasRoute
   '/scan': typeof ScanRouteWithChildren
+  '/scan/': typeof ScanIndexRoute
   '/scan/processando/$receiptId': typeof ScanProcessandoReceiptIdRoute
   '/scan/revisar/$receiptId': typeof ScanRevisarReceiptIdRoute
 }
@@ -80,6 +88,7 @@ export interface FileRouteTypes {
     | '/funcionarios'
     | '/receitas'
     | '/scan'
+    | '/scan/'
     | '/scan/processando/$receiptId'
     | '/scan/revisar/$receiptId'
   fileRoutesByTo: FileRoutesByTo
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/funcionarios'
     | '/receitas'
     | '/scan'
+    | '/scan/'
     | '/scan/processando/$receiptId'
     | '/scan/revisar/$receiptId'
   fileRoutesById: FileRoutesById
@@ -137,6 +147,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/scan/': {
+      id: '/scan/'
+      path: '/'
+      fullPath: '/scan/'
+      preLoaderRoute: typeof ScanIndexRouteImport
+      parentRoute: typeof ScanRoute
+    }
     '/scan/revisar/$receiptId': {
       id: '/scan/revisar/$receiptId'
       path: '/revisar/$receiptId'
@@ -155,11 +172,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface ScanRouteChildren {
+  ScanIndexRoute: typeof ScanIndexRoute
   ScanProcessandoReceiptIdRoute: typeof ScanProcessandoReceiptIdRoute
   ScanRevisarReceiptIdRoute: typeof ScanRevisarReceiptIdRoute
 }
 
 const ScanRouteChildren: ScanRouteChildren = {
+  ScanIndexRoute: ScanIndexRoute,
   ScanProcessandoReceiptIdRoute: ScanProcessandoReceiptIdRoute,
   ScanRevisarReceiptIdRoute: ScanRevisarReceiptIdRoute,
 }
