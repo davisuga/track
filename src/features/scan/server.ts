@@ -103,7 +103,7 @@ function getParserProvider() {
 
   if (!apiKey) {
     throw new Error(
-      "Add GOOGLE_AI_KEY or OPENAI_API_KEY before running receipt analysis."
+      "Defina GOOGLE_AI_KEY ou OPENAI_API_KEY antes de analisar recibos."
     )
   }
 
@@ -115,7 +115,7 @@ function getGoogleVisionProvider() {
     process.env.GOOGLE_AI_KEY ?? process.env.GOOGLE_GENERATIVE_AI_API_KEY
 
   if (!googleApiKey) {
-    throw new Error("GOOGLE_AI_KEY is required for receipt OCR.")
+    throw new Error("GOOGLE_AI_KEY é obrigatória para o OCR de recibos.")
   }
 
   return createGoogleGenerativeAI({ apiKey: googleApiKey })
@@ -134,7 +134,7 @@ async function fetchUserContext(userId: string) {
   const user = data.usersById
 
   if (!user) {
-    throw new Error("The selected employee could not be found.")
+    throw new Error("Não foi possível encontrar o funcionário selecionado.")
   }
 
   return user
@@ -179,7 +179,7 @@ async function persistReceipt(input: {
   const savedReceipt = receiptData.insertReceipts.returning[0]
 
   if (!savedReceipt) {
-    throw new Error("The receipt could not be saved.")
+    throw new Error("Não foi possível salvar o recibo.")
   }
 
   const itemsData = await execute(InsertReceiptItemsMutation, {
@@ -279,7 +279,7 @@ async function runModalOcr(input: { buffer: Buffer }) {
 
   if (!response.ok) {
     throw new Error(
-      "Receipt OCR failed. Try another photo or enter the items manually."
+      "O OCR do recibo falhou. Tente outra foto ou preencha os itens manualmente."
     )
   }
 
@@ -287,7 +287,7 @@ async function runModalOcr(input: { buffer: Buffer }) {
 
   if (payload.error) {
     throw new Error(
-      "Receipt OCR failed. Try another photo or enter the items manually."
+      "O OCR do recibo falhou. Tente outra foto ou preencha os itens manualmente."
     )
   }
 
@@ -311,7 +311,7 @@ async function runOcr(input: {
 
   if (!cleanedText) {
     throw new Error(
-      "This image could not be read clearly. Try another photo or enter the items manually."
+      "Não foi possível ler esta imagem com clareza. Tente outra foto ou preencha os itens manualmente."
     )
   }
 
@@ -367,7 +367,7 @@ export const analyzeReceiptFromR2 = createServerFn({ method: "POST" })
       return await parseReceiptText(ocrText)
     } catch {
       throw new Error(
-        "Receipt text was read, but the structured extraction failed. You can retry or enter the items manually."
+        "O texto do recibo foi lido, mas a extração estruturada falhou. Você pode tentar novamente ou preencher os itens manualmente."
       )
     }
   })

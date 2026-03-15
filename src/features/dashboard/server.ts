@@ -225,7 +225,7 @@ function normalizeReceipt(
     status: receipt.status ?? null,
     totalAmount: toNumber(receipt.totalAmount),
     userId: receipt.userId,
-    userName: receipt.user?.fullName ?? "Unknown employee",
+    userName: receipt.user?.fullName ?? "Funcionário desconhecido",
     vendorName: receipt.vendorName,
     vendorTaxId: receipt.vendorTaxId ?? "",
     vendorTaxIdValid: Boolean(receipt.vendorTaxIdValid),
@@ -346,7 +346,7 @@ export const getReceiptDetail = createServerFn({ method: "POST" })
     const receipt = result.receiptsById
 
     if (!receipt) {
-      throw new Error("The selected receipt could not be found.")
+      throw new Error("Não foi possível encontrar o recibo selecionado.")
     }
 
     const normalizedReceipt = normalizeReceipt(receipt)

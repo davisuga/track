@@ -10,24 +10,26 @@ export const graphQlUuidSchema = z
   .string()
   .regex(
     /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/,
-    "Invalid UUID"
+    "UUID inválido"
   )
 
 export const receiptItemInputSchema = z.object({
-  name: z.string().trim().min(1, "Item name is required."),
+  name: z.string().trim().min(1, "O nome do item é obrigatório."),
   category: z.string().trim().max(80).optional().default(""),
-  quantity: z.number().positive("Quantity must be greater than zero."),
-  unitPrice: z.number().nonnegative("Unit price must be zero or more."),
+  quantity: z.number().positive("A quantidade deve ser maior que zero."),
+  unitPrice: z.number().nonnegative("O preço unitário deve ser zero ou maior."),
 })
 
 export const analyzedReceiptDraftSchema = z.object({
-  vendorName: z.string().trim().min(1, "Supplier is required."),
+  vendorName: z.string().trim().min(1, "O fornecedor é obrigatório."),
   vendorTaxId: z.string().trim().max(32).optional().default(""),
-  receiptDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD."),
-  totalAmount: z.number().nonnegative("Total must be zero or more."),
+  receiptDate: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "Use o formato AAAA-MM-DD."),
+  totalAmount: z.number().nonnegative("O total deve ser zero ou maior."),
   items: z
     .array(receiptItemInputSchema)
-    .min(1, "At least one item is required."),
+    .min(1, "Pelo menos um item é obrigatório."),
 })
 
 export const editableReceiptItemSchema = receiptItemInputSchema.extend({
@@ -62,7 +64,9 @@ export const saveReceiptInputSchema = z.object({
   vendorTaxId: analyzedReceiptDraftSchema.shape.vendorTaxId,
   receiptDate: analyzedReceiptDraftSchema.shape.receiptDate,
   totalAmount: analyzedReceiptDraftSchema.shape.totalAmount,
-  items: z.array(editableReceiptItemSchema).min(1, "Add at least one item."),
+  items: z
+    .array(editableReceiptItemSchema)
+    .min(1, "Adicione pelo menos um item."),
 })
 
 export type ReceiptItemInput = z.infer<typeof receiptItemInputSchema>

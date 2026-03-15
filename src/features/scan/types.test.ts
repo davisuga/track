@@ -21,7 +21,7 @@ describe("graphQlUuidSchema", () => {
   })
 
   it("rejects non-uuid-shaped strings", () => {
-    expect(() => graphQlUuidSchema.parse("not-a-uuid")).toThrow("Invalid UUID")
+    expect(() => graphQlUuidSchema.parse("not-a-uuid")).toThrow("UUID inválido")
   })
 })
 

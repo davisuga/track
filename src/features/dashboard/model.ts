@@ -566,7 +566,9 @@ function buildAlerts(input: {
       alerts.push({
         id: `policy:${receipt.id}:${category}`,
         metric: i18n.t("dashboard.alerts.metrics.overLimit", {
-          percent: Math.round(((categoryTotal - limitAmount) / limitAmount) * 100),
+          percent: Math.round(
+            ((categoryTotal - limitAmount) / limitAmount) * 100
+          ),
         }),
         priority: 100 + (categoryTotal - limitAmount),
         text: i18n.t("dashboard.alerts.policyExceeded", {

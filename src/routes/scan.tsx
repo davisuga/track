@@ -2,6 +2,7 @@ import * as React from "react"
 import { createFileRoute } from "@tanstack/react-router"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useServerFn } from "@tanstack/react-start"
+import { useTranslation } from "react-i18next"
 import {
   Camera,
   Check,
@@ -38,6 +39,7 @@ import {
   sumItemTotals,
   toErrorMessage,
 } from "@/features/scan/utils"
+import { preciseCurrencyFormatter } from "@/lib/i18n"
 
 const bootstrapQueryKey = ["scan-bootstrap"]
 const dashboardQueryKey = ["dashboard-bootstrap"]
@@ -61,6 +63,7 @@ export const Route = createFileRoute("/scan")({
 })
 
 function ScanRoute() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const fileInputRef = React.useRef<HTMLInputElement | null>(null)
   const bootstrapServerFn = useServerFn(getScanBootstrap)
@@ -146,7 +149,7 @@ function ScanRoute() {
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
       if (!selectedUserId) {
-        throw new Error("Select an employee before uploading a receipt.")
+        throw new Error("Selecione um funcionário antes de enviar um recibo.")
       }
 
       const contentType = file.type || "image/jpeg"
@@ -167,9 +170,7 @@ function ScanRoute() {
       })
 
       if (!response.ok) {
-        throw new Error(
-          "The photo could not be uploaded. Try again with another image."
-        )
+        throw new Error("Não foi possível enviar a foto. Tente outra imagem.")
       }
 
       return upload
@@ -182,7 +183,7 @@ function ScanRoute() {
         allowManualEntry: false,
         message: toErrorMessage(
           error,
-          "The photo upload failed. Try again with another image."
+          "Falha ao enviar a foto. Tente outra imagem."
         ),
       })
       setStep("error")
@@ -192,11 +193,11 @@ function ScanRoute() {
   const analyzeMutation = useMutation({
     mutationFn: async () => {
       if (!selectedUserId) {
-        throw new Error("Select an employee before running extraction.")
+        throw new Error("Selecione um funcionário antes de extrair o recibo.")
       }
 
       if (!uploadedObjectKey) {
-        throw new Error("Upload a receipt image before running extraction.")
+        throw new Error("Envie a imagem do recibo antes de iniciar a extração.")
       }
 
       return analyzeReceiptServerFn({
@@ -216,7 +217,7 @@ function ScanRoute() {
         allowManualEntry: true,
         message: toErrorMessage(
           error,
-          "This receipt could not be extracted cleanly. Try another photo or enter the items manually."
+          "Não foi possível extrair este recibo com segurança. Tente outra foto ou preencha os itens manualmente."
         ),
       })
       setStep("error")
@@ -247,7 +248,7 @@ function ScanRoute() {
         allowManualEntry: true,
         message: toErrorMessage(
           error,
-          "The receipt could not be saved. Review the fields and try again."
+          "Não foi possível salvar o recibo. Revise os campos e tente novamente."
         ),
       })
       setStep("error")
@@ -390,7 +391,7 @@ function ScanRoute() {
       <div className="flex min-h-[calc(100vh-120px)] items-center justify-center p-6">
         <div className="flex items-center gap-3 text-sm text-text-secondary">
           <Loader2 className="animate-spin" size={18} />
-          Loading receipt scanner...
+          {t("scan.loading")}
         </div>
       </div>
     )
@@ -404,12 +405,12 @@ function ScanRoute() {
             <TriangleAlert className="mt-1 text-danger" size={20} />
             <div className="space-y-2">
               <h1 className="font-display text-xl font-bold">
-                Scanner unavailable
+                {t("scan.unavailableTitle")}
               </h1>
               <p className="text-sm text-text-secondary">
                 {toErrorMessage(
                   bootstrapQuery.error,
-                  "The scan screen could not load its initial data."
+                  t("scan.unavailableFallback")
                 )}
               </p>
             </div>
@@ -436,7 +437,7 @@ function ScanRoute() {
         </div>
         <div className="min-w-0 flex-1">
           <label className="block text-xs font-medium tracking-[0.12em] text-text-secondary uppercase">
-            Employee
+            {t("scan.employee")}
           </label>
           <select
             className="mt-1 w-full bg-transparent text-sm font-medium outline-none"
@@ -455,10 +456,7 @@ function ScanRoute() {
 
       {!users.length ? (
         <Card className="p-6">
-          <p className="text-sm text-text-secondary">
-            No employees were found in GraphQL. Add a user before scanning
-            receipts.
-          </p>
+          <p className="text-sm text-text-secondary">{t("scan.noEmployees")}</p>
         </Card>
       ) : (
         <AnimatePresence mode="wait">
@@ -471,10 +469,10 @@ function ScanRoute() {
             >
               <div className="space-y-2 text-center">
                 <h1 className="font-display text-4xl font-bold tracking-tight">
-                  Scan Receipt
+                  {t("scan.captureTitle")}
                 </h1>
                 <p className="text-base text-text-secondary">
-                  Take a clear photo or upload a receipt from the gallery.
+                  {t("scan.captureDescription")}
                 </p>
               </div>
 
@@ -489,10 +487,10 @@ function ScanRoute() {
                 </div>
                 <div className="space-y-1 text-center">
                   <p className="font-display text-xl font-bold">
-                    Take photo or upload
+                    {t("scan.captureButton")}
                   </p>
                   <p className="text-sm text-text-secondary">
-                    Keep the receipt flat and fully inside the frame
+                    {t("scan.captureHint")}
                   </p>
                 </div>
               </button>
@@ -509,25 +507,25 @@ function ScanRoute() {
             >
               <div className="space-y-1 text-center">
                 <h2 className="font-display text-3xl font-bold">
-                  Confirm photo
+                  {t("scan.confirmPhotoTitle")}
                 </h2>
                 <p className="text-sm text-text-secondary">
                   {uploadMutation.isPending
-                    ? "Uploading the original image so it stays available for audit."
-                    : "If the image looks readable, run extraction."}
+                    ? t("scan.confirmPhotoUploading")
+                    : t("scan.confirmPhotoReady")}
                 </p>
               </div>
 
               <Card className="overflow-hidden">
                 {previewUrl ? (
                   <img
-                    alt="Receipt preview"
+                    alt="Pré-visualização do recibo"
                     className="aspect-[3/4] w-full bg-bg-base object-contain"
                     src={previewUrl}
                   />
                 ) : (
                   <div className="flex aspect-[3/4] items-center justify-center bg-bg-base text-text-secondary">
-                    No image selected
+                    {t("scan.noImageSelected")}
                   </div>
                 )}
               </Card>
@@ -538,10 +536,10 @@ function ScanRoute() {
                 </p>
                 <p className="mt-1">
                   {uploadMutation.isPending
-                    ? "Uploading now..."
+                    ? t("scan.uploadingNow")
                     : uploadedObjectKey
-                      ? "Stored privately and ready for analysis."
-                      : "Waiting for upload to finish."}
+                      ? t("scan.storedAndReady")
+                      : t("scan.waitingUpload")}
                 </p>
               </div>
 
@@ -553,7 +551,7 @@ function ScanRoute() {
                   variant="secondary"
                 >
                   <ImagePlus className="mr-2" size={18} />
-                  Choose another
+                  {t("scan.chooseAnother")}
                 </Button>
                 <Button
                   className="flex-1"
@@ -566,7 +564,7 @@ function ScanRoute() {
                   ) : (
                     <Sparkles className="mr-2" size={18} />
                   )}
-                  Analyze
+                  {t("scan.analyze")}
                 </Button>
               </div>
             </motion.div>
@@ -585,10 +583,10 @@ function ScanRoute() {
               </div>
               <div className="space-y-2 text-center">
                 <h2 className="font-display text-2xl font-bold">
-                  Reading your receipt...
+                  {t("scan.analyzingTitle")}
                 </h2>
                 <p className="text-sm text-text-secondary">
-                  Extracting receipt fields from the stored image.
+                  {t("scan.analyzingDescription")}
                 </p>
               </div>
             </motion.div>
@@ -604,17 +602,17 @@ function ScanRoute() {
             >
               <div className="space-y-1 text-center">
                 <h2 className="font-display text-3xl font-bold">
-                  Review extraction
+                  {t("scan.reviewTitle")}
                 </h2>
                 <p className="text-sm text-text-secondary">
-                  Fix any field inline before saving it to the dashboard.
+                  {t("scan.reviewDescription")}
                 </p>
               </div>
 
               {previewUrl ? (
                 <Card className="overflow-hidden">
                   <img
-                    alt="Uploaded receipt preview"
+                    alt="Pré-visualização do recibo enviado"
                     className="max-h-44 w-full bg-bg-base object-contain"
                     src={previewUrl}
                   />
@@ -625,14 +623,14 @@ function ScanRoute() {
                 <div className="grid gap-4">
                   <label className="grid gap-1">
                     <span className="text-xs font-medium tracking-[0.12em] text-text-secondary uppercase">
-                      Supplier
+                      {t("scan.supplier")}
                     </span>
                     <input
                       className="rounded-2xl border border-border bg-bg-base px-4 py-3 text-sm ring-accent transition outline-none focus:ring-2"
                       onChange={(event) =>
                         updateDraftField("vendorName", event.target.value)
                       }
-                      placeholder="Supplier name"
+                      placeholder={t("scan.supplierPlaceholder")}
                       type="text"
                       value={draft.vendorName}
                     />
@@ -640,27 +638,26 @@ function ScanRoute() {
 
                   <label className="grid gap-1">
                     <span className="text-xs font-medium tracking-[0.12em] text-text-secondary uppercase">
-                      Vendor tax ID
+                      {t("scan.vendorTaxId")}
                     </span>
                     <input
                       className="rounded-2xl border border-border bg-bg-base px-4 py-3 text-sm ring-accent transition outline-none focus:ring-2"
                       onChange={(event) =>
                         updateDraftField("vendorTaxId", event.target.value)
                       }
-                      placeholder="Optional CNPJ"
+                      placeholder={t("scan.vendorTaxIdPlaceholder")}
                       type="text"
                       value={formatVendorTaxId(draft.vendorTaxId)}
                     />
                     {draft.vendorTaxId.trim() ? (
                       <span className="text-xs text-text-secondary">
                         {isValidBrazilCnpj(draft.vendorTaxId)
-                          ? "Valid CNPJ format detected."
-                          : "This tax ID will be flagged if it is missing or invalid."}
+                          ? t("scan.validCnpj")
+                          : t("scan.invalidCnpj")}
                       </span>
                     ) : (
                       <span className="text-xs text-text-secondary">
-                        Vendors without a valid tax ID will appear in dashboard
-                        alerts.
+                        {t("scan.missingCnpjAlert")}
                       </span>
                     )}
                   </label>
@@ -668,7 +665,7 @@ function ScanRoute() {
                   <div className="grid grid-cols-2 gap-3">
                     <label className="grid gap-1">
                       <span className="text-xs font-medium tracking-[0.12em] text-text-secondary uppercase">
-                        Date
+                        {t("scan.date")}
                       </span>
                       <input
                         className="rounded-2xl border border-border bg-bg-base px-4 py-3 text-sm ring-accent transition outline-none focus:ring-2"
@@ -682,7 +679,7 @@ function ScanRoute() {
 
                     <label className="grid gap-1">
                       <span className="text-xs font-medium tracking-[0.12em] text-text-secondary uppercase">
-                        Total
+                        {t("scan.total")}
                       </span>
                       <input
                         className="rounded-2xl border border-border bg-bg-base px-4 py-3 text-right text-sm ring-accent transition outline-none focus:ring-2"
@@ -704,9 +701,11 @@ function ScanRoute() {
               <Card className="p-5">
                 <div className="mb-4 flex items-center justify-between">
                   <div>
-                    <h3 className="font-display text-lg font-bold">Items</h3>
+                    <h3 className="font-display text-lg font-bold">
+                      {t("scan.itemsTitle")}
+                    </h3>
                     <p className="text-sm text-text-secondary">
-                      Tap any field to correct the extracted values.
+                      {t("scan.itemsDescription")}
                     </p>
                   </div>
                   <Button
@@ -716,14 +715,14 @@ function ScanRoute() {
                     variant="secondary"
                   >
                     <Plus className="mr-2" size={16} />
-                    Add item
+                    {t("scan.addItem")}
                   </Button>
                 </div>
 
                 <div className="space-y-4">
                   {draft.items.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-border px-4 py-6 text-center text-sm text-text-secondary">
-                      No items yet. Add the first item manually.
+                      {t("scan.noItems")}
                     </div>
                   ) : (
                     draft.items.map((item) => (
@@ -742,7 +741,7 @@ function ScanRoute() {
                                   event.target.value
                                 )
                               }
-                              placeholder="Product name"
+                              placeholder={t("scan.itemNamePlaceholder")}
                               type="text"
                               value={item.name}
                             />
@@ -764,7 +763,7 @@ function ScanRoute() {
                                 event.target.value
                               )
                             }
-                            placeholder="Category"
+                            placeholder={t("scan.categoryPlaceholder")}
                             type="text"
                             value={item.category}
                           />
@@ -772,7 +771,7 @@ function ScanRoute() {
                           <div className="grid grid-cols-3 gap-3">
                             <label className="grid gap-1">
                               <span className="text-xs font-medium tracking-[0.12em] text-text-secondary uppercase">
-                                Qty
+                                {t("scan.quantity")}
                               </span>
                               <input
                                 className="rounded-xl border border-border bg-white px-3 py-2 text-sm ring-accent transition outline-none focus:ring-2"
@@ -791,7 +790,7 @@ function ScanRoute() {
 
                             <label className="grid gap-1">
                               <span className="text-xs font-medium tracking-[0.12em] text-text-secondary uppercase">
-                                Unit price
+                                {t("scan.unitPrice")}
                               </span>
                               <input
                                 className="rounded-xl border border-border bg-white px-3 py-2 text-sm ring-accent transition outline-none focus:ring-2"
@@ -810,12 +809,11 @@ function ScanRoute() {
 
                             <div className="grid gap-1">
                               <span className="text-xs font-medium tracking-[0.12em] text-text-secondary uppercase">
-                                Line total
+                                {t("scan.lineTotal")}
                               </span>
                               <div className="rounded-xl border border-border bg-white px-3 py-2 text-sm font-semibold">
-                                $
-                                {Number(item.quantity * item.unitPrice).toFixed(
-                                  2
+                                {preciseCurrencyFormatter.format(
+                                  Number(item.quantity * item.unitPrice)
                                 )}
                               </div>
                             </div>
@@ -828,9 +826,9 @@ function ScanRoute() {
 
                 <div className="mt-4 rounded-[20px] bg-bg-inverse px-4 py-3 text-sm text-text-inverse">
                   <div className="flex items-center justify-between">
-                    <span>Item sum</span>
+                    <span>{t("scan.itemSum")}</span>
                     <span className="font-mono font-semibold">
-                      ${itemSum.toFixed(2)}
+                      {preciseCurrencyFormatter.format(itemSum)}
                     </span>
                   </div>
                 </div>
@@ -844,7 +842,7 @@ function ScanRoute() {
                   variant="secondary"
                 >
                   <RefreshCcw className="mr-2" size={18} />
-                  Rescan
+                  {t("scan.rescan")}
                 </Button>
                 <Button
                   className="flex-1"
@@ -857,7 +855,7 @@ function ScanRoute() {
                   ) : (
                     <Check className="mr-2" size={18} />
                   )}
-                  Confirm and Save
+                  {t("scan.confirmAndSave")}
                 </Button>
               </div>
             </motion.div>
@@ -878,15 +876,14 @@ function ScanRoute() {
                   </div>
                   <div className="space-y-2">
                     <h2 className="font-display text-2xl font-bold">
-                      We couldn&apos;t read that receipt
+                      {t("scan.errorTitle")}
                     </h2>
                     <p className="text-sm text-text-secondary">
-                      {errorState?.message ??
-                        "Try another photo, or enter the receipt manually if the extraction failed."}
+                      {errorState?.message ?? t("scan.errorFallback")}
                     </p>
                     {selectedFileName ? (
                       <p className="text-xs font-medium tracking-[0.12em] text-text-secondary uppercase">
-                        Current file: {selectedFileName}
+                        {t("scan.currentFile")}: {selectedFileName}
                       </p>
                     ) : null}
                   </div>
@@ -900,18 +897,18 @@ function ScanRoute() {
                   variant="secondary"
                 >
                   <Upload className="mr-2" size={18} />
-                  Try another photo
+                  {t("scan.tryAnotherPhoto")}
                 </Button>
                 {errorState?.allowManualEntry ? (
                   <Button onClick={beginManualEntry} type="button">
                     <Plus className="mr-2" size={18} />
-                    Enter items manually
+                    {t("scan.enterManually")}
                   </Button>
                 ) : null}
                 {previewUrl && uploadedObjectKey ? (
                   <Button onClick={handleAnalyze} type="button" variant="ghost">
                     <Sparkles className="mr-2" size={18} />
-                    Retry extraction
+                    {t("scan.retryExtraction")}
                   </Button>
                 ) : null}
               </div>
@@ -931,12 +928,12 @@ function ScanRoute() {
               </div>
               <div className="space-y-2 text-center">
                 <h2 className="font-display text-3xl font-bold">
-                  Receipt saved
+                  {t("scan.savedTitle")}
                 </h2>
                 <p className="text-sm text-text-secondary">
                   {selectedUser?.fullName
-                    ? `Saved for ${selectedUser.fullName}. Ready for the next scan.`
-                    : "Ready for the next scan."}
+                    ? t("scan.savedFor", { name: selectedUser.fullName })
+                    : t("scan.savedFallback")}
                 </p>
               </div>
             </motion.div>

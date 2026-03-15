@@ -1,4 +1,8 @@
-import { GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3"
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3"
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 
 import type { CreateUploadUrlResult } from "@/features/scan/types"
@@ -22,7 +26,9 @@ function getR2Config(): R2Config {
   const bucketName = process.env.R2_BUCKET_NAME
 
   if (!endpoint || !accessKeyId || !secretAccessKey || !bucketName) {
-    throw new Error("R2 storage is not configured. Add the R2_* environment variables.")
+    throw new Error(
+      "O armazenamento R2 não está configurado. Defina as variáveis de ambiente R2_*."
+    )
   }
 
   return {
@@ -53,12 +59,18 @@ export async function createPresignedReceiptUploadUrl(input: {
   userId: string
 }): Promise<CreateUploadUrlResult> {
   if (!isSupportedReceiptMimeType(input.contentType)) {
-    throw new Error("Unsupported file type. Upload a JPG, PNG, WEBP, HEIC, or HEIF image.")
+    throw new Error(
+      "Tipo de arquivo não suportado. Envie uma imagem JPG, PNG, WEBP, HEIC ou HEIF."
+    )
   }
 
   const client = createR2Client()
   const { bucketName } = getR2Config()
-  const objectKey = buildReceiptObjectKey(input.userId, input.fileName, input.contentType)
+  const objectKey = buildReceiptObjectKey(
+    input.userId,
+    input.fileName,
+    input.contentType
+  )
 
   try {
     const uploadUrl = await getSignedUrl(
@@ -68,7 +80,7 @@ export async function createPresignedReceiptUploadUrl(input: {
         Key: objectKey,
         ContentType: input.contentType,
       }),
-      { expiresIn: 60 * 5 },
+      { expiresIn: 60 * 5 }
     )
 
     return {
@@ -90,13 +102,15 @@ export async function downloadReceiptObject(objectKey: string) {
       new GetObjectCommand({
         Bucket: bucketName,
         Key: objectKey,
-      }),
+      })
     )
 
     const bytes = await response.Body?.transformToByteArray()
 
     if (!bytes) {
-      throw new Error("The uploaded receipt image could not be read from storage.")
+      throw new Error(
+        "Não foi possível ler a imagem do recibo enviada no armazenamento."
+      )
     }
 
     return {
@@ -108,7 +122,10 @@ export async function downloadReceiptObject(objectKey: string) {
   }
 }
 
-export async function createSignedReceiptReadUrl(objectKey: string, expiresIn = 60 * 5) {
+export async function createSignedReceiptReadUrl(
+  objectKey: string,
+  expiresIn = 60 * 5
+) {
   const client = createR2Client()
   const { bucketName } = getR2Config()
 
@@ -119,7 +136,7 @@ export async function createSignedReceiptReadUrl(objectKey: string, expiresIn = 
         Bucket: bucketName,
         Key: objectKey,
       }),
-      { expiresIn },
+      { expiresIn }
     )
   } finally {
     client.destroy()

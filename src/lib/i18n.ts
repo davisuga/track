@@ -31,6 +31,10 @@ const resources = {
       app: {
         htmlLang: APP_LOCALE,
         title: "ReceiptIQ",
+        nav: {
+          capture: "Captura",
+          dashboard: "Painel",
+        },
       },
       dashboard: {
         periods: {
@@ -184,14 +188,14 @@ const resources = {
         analyzingDescription:
           "Extraindo os campos do recibo a partir da imagem armazenada.",
         reviewTitle: "Revisar extração",
-        reviewDescription:
-          "Corrija qualquer campo antes de salvar no painel.",
+        reviewDescription: "Corrija qualquer campo antes de salvar no painel.",
         supplier: "Fornecedor",
         supplierPlaceholder: "Nome do fornecedor",
         vendorTaxId: "CNPJ do fornecedor",
         vendorTaxIdPlaceholder: "CNPJ opcional",
         validCnpj: "Formato de CNPJ válido detectado.",
-        invalidCnpj: "Esse CNPJ será sinalizado se estiver ausente ou inválido.",
+        invalidCnpj:
+          "Esse CNPJ será sinalizado se estiver ausente ou inválido.",
         missingCnpjAlert:
           "Fornecedores sem CNPJ válido aparecerão nos alertas do painel.",
         date: "Data",
@@ -218,8 +222,7 @@ const resources = {
         retryExtraction: "Tentar extrair novamente",
         savedTitle: "Recibo salvo",
         savedFallback: "Pronto para o próximo escaneamento.",
-        savedFor:
-          "Salvo para {{name}}. Pronto para o próximo escaneamento.",
+        savedFor: "Salvo para {{name}}. Pronto para o próximo escaneamento.",
       },
     },
   },

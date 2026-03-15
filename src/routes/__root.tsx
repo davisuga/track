@@ -3,6 +3,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import appCss from "../styles.css?url"
+import { AppHeader } from "@/components/app-header"
 import i18n from "@/lib/i18n"
 
 const queryClient = new QueryClient()
@@ -39,7 +40,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <QueryClientProvider client={queryClient}>
-          {children}
+          <div className="min-h-screen pb-6">
+            <AppHeader />
+            <main>{children}</main>
+          </div>
           <TanStackDevtools
             config={{
               position: "bottom-right",

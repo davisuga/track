@@ -31,6 +31,7 @@ import {
 import {
   currencyFormatter,
   dateFormatter,
+  default as i18n,
   numberFormatter,
   preciseCurrencyFormatter,
 } from "@/lib/i18n"
@@ -273,11 +274,17 @@ function DashboardRoute() {
                           </span>
                         </div>
                         <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-secondary">
-                          <span>{employee.receiptCount} receipts</span>
+                          <span>
+                            {employee.receiptCount}{" "}
+                            {t("dashboard.labels.receiptCount")}
+                          </span>
                           <span>
                             {currencyFormatter.format(employee.totalSpent)}
                           </span>
-                          <span>Top category: {employee.topCategory}</span>
+                          <span>
+                            {t("dashboard.labels.topCategory")}:{" "}
+                            {employee.topCategory}
+                          </span>
                         </div>
                       </div>
 
@@ -310,7 +317,8 @@ function DashboardRoute() {
                                   </p>
                                   <p className="mt-1 text-sm text-text-secondary">
                                     {formatDate(receipt.receiptDate)} ·{" "}
-                                    {receipt.items.length} items
+                                    {receipt.items.length}{" "}
+                                    {t("dashboard.labels.items")}
                                   </p>
                                 </div>
                                 <p className="shrink-0 font-display font-bold">
@@ -332,18 +340,18 @@ function DashboardRoute() {
             <EmptyState
               cta={
                 <Link className="text-sm font-semibold underline" to="/scan">
-                  Process the first receipt
+                  {t("dashboard.sections.employee.cta")}
                 </Link>
               }
-              message="No employee activity exists in this period yet."
+              message={t("dashboard.sections.employee.empty")}
             />
           )}
         </SectionCard>
 
         <div className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
           <SectionCard
-            description="Repeated small purchases and redundant buying become visible here."
-            title="Top products"
+            description={t("dashboard.sections.products.description")}
+            title={t("dashboard.sections.products.title")}
           >
             {view.products.length ? (
               <div className="space-y-2">
@@ -360,8 +368,14 @@ function DashboardRoute() {
                         {product.name}
                       </p>
                       <div className="mt-1 flex flex-wrap gap-x-4 gap-y-1 text-sm text-text-secondary">
-                        <span>{product.purchaseCount} times bought</span>
-                        <span>{product.employeeCount} employees</span>
+                        <span>
+                          {product.purchaseCount}{" "}
+                          {t("dashboard.labels.timesBought")}
+                        </span>
+                        <span>
+                          {product.employeeCount}{" "}
+                          {t("dashboard.labels.employees")}
+                        </span>
                         <span>
                           {currencyFormatter.format(product.totalSpent)}
                         </span>
@@ -371,13 +385,13 @@ function DashboardRoute() {
                 ))}
               </div>
             ) : (
-              <EmptyState message="No product-level spend was identified in this period." />
+              <EmptyState message={t("dashboard.sections.products.empty")} />
             )}
           </SectionCard>
 
           <SectionCard
-            description="A ratio view of where money is going."
-            title="Spend by category"
+            description={t("dashboard.sections.categories.description")}
+            title={t("dashboard.sections.categories.title")}
           >
             {view.summary.totalSpent > 0 ? (
               <div className="space-y-5">
@@ -418,14 +432,14 @@ function DashboardRoute() {
                 </div>
               </div>
             ) : (
-              <EmptyState message="No categorized spend is available for the selected period." />
+              <EmptyState message={t("dashboard.sections.categories.empty")} />
             )}
           </SectionCard>
         </div>
 
         <SectionCard
-          description="Concrete findings only: policy breaches, missing or invalid vendor tax IDs, duplicates, personal-looking purchases, bulk-buy patterns, and price spread."
-          title="Alerts"
+          description={t("dashboard.sections.alerts.description")}
+          title={t("dashboard.sections.alerts.title")}
         >
           {visibleAlerts.length ? (
             <div className="space-y-2">
@@ -459,13 +473,13 @@ function DashboardRoute() {
               ))}
             </div>
           ) : (
-            <EmptyState message="No active alerts need attention in this period." />
+            <EmptyState message={t("dashboard.sections.alerts.empty")} />
           )}
         </SectionCard>
 
         <SectionCard
-          description="Open any receipt to verify the source image and extracted lines at any time."
-          title="Receipt history"
+          description={t("dashboard.sections.history.description")}
+          title={t("dashboard.sections.history.title")}
         >
           {view.filteredReceipts.length ? (
             <div className="space-y-2">
@@ -487,7 +501,7 @@ function DashboardRoute() {
                     </div>
                     <p className="mt-1 text-sm text-text-secondary">
                       {formatDate(receipt.receiptDate)} · {receipt.items.length}{" "}
-                      items
+                      {t("dashboard.labels.items")}
                     </p>
                   </div>
                   <div className="shrink-0 text-right">
@@ -495,7 +509,7 @@ function DashboardRoute() {
                       {currencyFormatter.format(receipt.totalAmount)}
                     </p>
                     <p className="text-sm text-text-secondary">
-                      Tap for detail
+                      {t("dashboard.labels.tapForDetail")}
                     </p>
                   </div>
                 </button>
@@ -505,10 +519,10 @@ function DashboardRoute() {
             <EmptyState
               cta={
                 <Link className="text-sm font-semibold underline" to="/scan">
-                  Scan receipts into this period
+                  {t("dashboard.sections.history.cta")}
                 </Link>
               }
-              message="No receipts were submitted in the selected period."
+              message={t("dashboard.sections.history.empty")}
             />
           )}
         </SectionCard>
@@ -519,12 +533,10 @@ function DashboardRoute() {
               <ScanLine size={22} />
             </div>
             <h2 className="mt-4 font-display text-2xl font-bold">
-              No receipts yet
+              {t("dashboard.labels.noReceiptsTitle")}
             </h2>
             <p className="mx-auto mt-2 max-w-lg text-sm leading-6 text-text-secondary">
-              The dashboard is ready. Once employees submit receipts, this
-              screen will rank spend by person, show buying patterns, and
-              enforce the policy limits above.
+              {t("dashboard.labels.noReceiptsDescription")}
             </p>
             <div className="mt-5">
               <Link
@@ -532,7 +544,7 @@ function DashboardRoute() {
                 to="/scan"
               >
                 <ScanLine className="mr-2" size={18} />
-                Open scanner
+                {t("dashboard.labels.openScanner")}
               </Link>
             </div>
           </Card>
@@ -558,10 +570,11 @@ function DashboardRoute() {
               <div className="flex items-start justify-between gap-4 border-b border-border/60 px-5 py-4 md:px-6">
                 <div>
                   <p className="text-xs font-semibold tracking-[0.12em] text-text-secondary uppercase">
-                    Receipt detail
+                    {t("dashboard.labels.receiptDetail")}
                   </p>
                   <h2 className="mt-1 font-display text-2xl font-bold">
-                    {selectedReceipt?.vendorName ?? "Selected receipt"}
+                    {selectedReceipt?.vendorName ??
+                      t("dashboard.labels.selectedReceipt")}
                   </h2>
                   {selectedReceipt ? (
                     <p className="mt-1 text-sm text-text-secondary">
@@ -584,7 +597,7 @@ function DashboardRoute() {
                 <div className="flex min-h-[320px] items-center justify-center p-6">
                   <div className="flex items-center gap-3 text-sm text-text-secondary">
                     <Loader2 className="animate-spin" size={18} />
-                    Loading receipt detail...
+                    {t("dashboard.labels.loadingReceiptDetail")}
                   </div>
                 </div>
               ) : receiptDetailQuery.isError ? (
@@ -594,12 +607,14 @@ function DashboardRoute() {
                       <AlertTriangle className="mt-1 text-danger" size={18} />
                       <div>
                         <p className="font-display text-lg font-bold">
-                          Receipt detail unavailable
+                          {t("dashboard.labels.receiptDetailUnavailable")}
                         </p>
                         <p className="mt-1 text-sm text-text-secondary">
                           {receiptDetailQuery.error instanceof Error
                             ? receiptDetailQuery.error.message
-                            : "The selected receipt could not be opened."}
+                            : t(
+                                "dashboard.labels.receiptDetailUnavailableFallback"
+                              )}
                         </p>
                       </div>
                     </div>
@@ -618,8 +633,7 @@ function DashboardRoute() {
                       <div className="flex min-h-[320px] flex-col items-center justify-center gap-3 p-8 text-center text-text-secondary">
                         <ReceiptText size={28} />
                         <p className="max-w-xs text-sm leading-6">
-                          No source image is available for this receipt, but the
-                          extracted items remain visible for audit.
+                          {t("dashboard.labels.noSourceImage")}
                         </p>
                       </div>
                     )}
@@ -628,37 +642,38 @@ function DashboardRoute() {
                   <div className="max-h-[70vh] overflow-y-auto p-5 md:p-6">
                     <div className="grid gap-3 sm:grid-cols-2">
                       <MiniStat
-                        label="Supplier"
+                        label={t("dashboard.labels.supplier")}
                         value={receiptDetailQuery.data.receipt.vendorName}
                       />
                       <MiniStat
-                        label="Employee"
+                        label={t("dashboard.labels.employee")}
                         value={receiptDetailQuery.data.receipt.userName}
                       />
                       <MiniStat
-                        label="Receipt date"
+                        label={t("dashboard.labels.receiptDate")}
                         value={formatDate(
                           receiptDetailQuery.data.receipt.receiptDate
                         )}
                       />
                       <MiniStat
-                        label="Total"
+                        label={t("dashboard.labels.total")}
                         value={preciseCurrencyFormatter.format(
                           receiptDetailQuery.data.receipt.totalAmount
                         )}
                       />
                       <MiniStat
-                        label="Vendor tax ID"
+                        label={t("dashboard.labels.vendorTaxId")}
                         value={formatVendorTaxDisplay(
                           receiptDetailQuery.data.receipt.vendorTaxId,
                           receiptDetailQuery.data.receipt.vendorTaxIdValid
                         )}
                       />
                       <MiniStat
-                        label="Status"
-                        value={
-                          receiptDetailQuery.data.receipt.status ?? "extracted"
-                        }
+                        label={t("dashboard.labels.status")}
+                        value={formatReceiptStatus(
+                          receiptDetailQuery.data.receipt.status,
+                          t
+                        )}
                       />
                     </div>
 
@@ -674,12 +689,13 @@ function DashboardRoute() {
                                 {item.description}
                               </p>
                               <p className="mt-1 text-sm text-text-secondary">
-                                {item.category || "Other"} · Qty{" "}
+                                {item.category || t("dashboard.labels.other")} ·{" "}
+                                {t("dashboard.labels.quantity")}{" "}
                                 {trimNumber(item.quantity)} ·{" "}
                                 {preciseCurrencyFormatter.format(
                                   item.unitPrice
                                 )}{" "}
-                                each
+                                {t("dashboard.labels.each")}
                               </p>
                             </div>
                             <div className="text-right">
@@ -690,7 +706,7 @@ function DashboardRoute() {
                               </p>
                               {item.isPriceAnomaly ? (
                                 <p className="mt-1 text-xs font-semibold tracking-[0.1em] text-danger uppercase">
-                                  Price anomaly
+                                  {t("dashboard.labels.priceAnomaly")}
                                 </p>
                               ) : null}
                             </div>
@@ -797,12 +813,30 @@ function formatVendorTaxDisplay(
   vendorTaxIdValid: boolean
 ) {
   if (!vendorTaxId) {
-    return "Missing"
+    return i18n.t("dashboard.labels.missing")
   }
 
   if (vendorTaxIdValid) {
     return formatVendorTaxId(vendorTaxId)
   }
 
-  return `${formatVendorTaxId(vendorTaxId)} (invalid)`
+  return `${formatVendorTaxId(vendorTaxId)} (inválido)`
+}
+
+function formatReceiptStatus(
+  status: string | null,
+  t: (key: string) => string
+) {
+  switch (status) {
+    case "processing":
+      return t("dashboard.statuses.processing")
+    case "approved":
+      return t("dashboard.statuses.approved")
+    case "flagged":
+      return t("dashboard.statuses.flagged")
+    case "extracted":
+      return t("dashboard.statuses.extracted")
+    default:
+      return t("dashboard.statuses.unknown")
+  }
 }
