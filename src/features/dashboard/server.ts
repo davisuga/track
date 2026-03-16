@@ -2,7 +2,7 @@ import * as z from "zod"
 import { createServerFn } from "@tanstack/react-start"
 
 import type { TypedDocumentString } from "@/graphql/graphql"
-import { DASHBOARD_CATEGORY_OPTIONS } from "@/features/dashboard/model"
+import { getDashboardCategoryOptions } from "@/features/dashboard/model"
 import { graphQlUuidSchema } from "@/features/scan/types"
 import { execute } from "@/graphql/execute"
 import i18n, { preciseCurrencyFormatter } from "@/lib/i18n"
@@ -333,7 +333,7 @@ function toCount(value: string | null | undefined) {
 
 function getCategoryLabel(categoryKey: string) {
   return (
-    DASHBOARD_CATEGORY_OPTIONS.find((option) => option.key === categoryKey)
+    getDashboardCategoryOptions().find((option) => option.key === categoryKey)
       ?.label ?? i18n.t("dashboard.labels.other")
   )
 }
@@ -505,7 +505,7 @@ export const getDashboardSnapshot = createServerFn({ method: "POST" })
     if (!companyId) {
       return {
         alerts: [],
-        categories: DASHBOARD_CATEGORY_OPTIONS.map((option) => ({
+        categories: getDashboardCategoryOptions().map((option) => ({
           key: option.key,
           label: option.label,
           ratio: 0,
@@ -556,7 +556,7 @@ export const getDashboardSnapshot = createServerFn({ method: "POST" })
 
     return {
       alerts,
-      categories: DASHBOARD_CATEGORY_OPTIONS.map((option) => {
+      categories: getDashboardCategoryOptions().map((option) => {
         const row = (dataSnapshot.dashboardCategorySpend ?? []).find(
           (category) => category.category === option.key
         )

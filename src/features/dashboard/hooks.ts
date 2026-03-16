@@ -7,7 +7,7 @@ import type {
   DashboardReceiptDetailResult,
   DashboardSnapshot,
 } from "@/features/dashboard/server"
-import { DASHBOARD_CATEGORY_OPTIONS } from "@/features/dashboard/model"
+import { getDashboardCategoryOptions } from "@/features/dashboard/model"
 import {
   getDashboardSnapshot,
   getReceiptDetail,
@@ -29,7 +29,7 @@ const emptySummary = {
 export function getEmptyDashboardSnapshot(): DashboardSnapshot {
   return {
     alerts: [],
-    categories: DASHBOARD_CATEGORY_OPTIONS.map((option) => ({
+    categories: getDashboardCategoryOptions().map((option) => ({
       key: option.key,
       label: option.label,
       ratio: 0,

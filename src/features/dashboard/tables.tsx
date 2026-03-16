@@ -20,7 +20,7 @@ import type {
   DashboardEmployeeRow,
   DashboardReceiptRow,
 } from "@/features/dashboard/server"
-import { DASHBOARD_CATEGORY_OPTIONS } from "@/features/dashboard/model"
+import { getDashboardCategoryOptions } from "@/features/dashboard/model"
 import {
   SortableHeader,
   TablePagination,
@@ -546,7 +546,7 @@ export function ReceiptHistoryTable({
               value={categoryFilterValue}
             >
               <option value="">{t("dashboard.table.allCategories")}</option>
-              {DASHBOARD_CATEGORY_OPTIONS.map((option) => (
+              {getDashboardCategoryOptions().map((option) => (
                 <option key={option.key} value={option.key}>
                   {option.label}
                 </option>

@@ -121,37 +121,39 @@ export const DASHBOARD_PERIODS: Array<{ id: DashboardPeriod; label: string }> =
     { id: "all", label: i18n.t("dashboard.periods.all") },
   ]
 
-export const DASHBOARD_CATEGORY_OPTIONS: Array<{
+export function getDashboardCategoryOptions(): Array<{
   defaultLimit: number
   key: DashboardCategoryKey
   label: string
-}> = [
-  {
-    key: "food",
-    label: i18n.t("dashboard.categories.food"),
-    defaultLimit: 50,
-  },
-  {
-    key: "fuel",
-    label: i18n.t("dashboard.categories.fuel"),
-    defaultLimit: 150,
-  },
-  {
-    key: "office-supplies",
-    label: i18n.t("dashboard.categories.office-supplies"),
-    defaultLimit: 120,
-  },
-  {
-    key: "cleaning",
-    label: i18n.t("dashboard.categories.cleaning"),
-    defaultLimit: 90,
-  },
-  {
-    key: "other",
-    label: i18n.t("dashboard.categories.other"),
-    defaultLimit: 75,
-  },
-]
+}> {
+  return [
+    {
+      key: "food",
+      label: i18n.t("dashboard.categories.food"),
+      defaultLimit: 50,
+    },
+    {
+      key: "fuel",
+      label: i18n.t("dashboard.categories.fuel"),
+      defaultLimit: 150,
+    },
+    {
+      key: "office-supplies",
+      label: i18n.t("dashboard.categories.office-supplies"),
+      defaultLimit: 120,
+    },
+    {
+      key: "cleaning",
+      label: i18n.t("dashboard.categories.cleaning"),
+      defaultLimit: 90,
+    },
+    {
+      key: "other",
+      label: i18n.t("dashboard.categories.other"),
+      defaultLimit: 75,
+    },
+  ]
+}
 
 const PERIOD_LENGTHS: Record<Exclude<DashboardPeriod, "all">, number> = {
   "7d": 7,
@@ -298,7 +300,7 @@ export function normalizeDashboardCategory(input: {
 
 function getCategoryLabel(category: DashboardCategoryKey) {
   return (
-    DASHBOARD_CATEGORY_OPTIONS.find((option) => option.key === category)
+    getDashboardCategoryOptions().find((option) => option.key === category)
       ?.label ?? i18n.t("dashboard.labels.other")
   )
 }
@@ -440,7 +442,7 @@ function buildPolicyRows(
 ) {
   const policyMap = getPolicyMap(policyLimits)
 
-  return DASHBOARD_CATEGORY_OPTIONS.map((option) => {
+  return getDashboardCategoryOptions().map((option) => {
     const policy = policyMap.get(option.key)
     const totalSpent = roundCurrency(
       filteredReceipts.reduce((sum, receipt) => {
@@ -547,7 +549,7 @@ function buildAlerts(input: {
     }
   }
 
-  for (const option of DASHBOARD_CATEGORY_OPTIONS) {
+  for (const option of getDashboardCategoryOptions()) {
     const limitAmount = policyMap.get(option.key)?.maxPerMonth ?? null
 
     if (!limitAmount) {
@@ -735,7 +737,7 @@ export function buildDashboardView(
     }
   }
 
-  const categories = DASHBOARD_CATEGORY_OPTIONS.map((option) => {
+  const categories = getDashboardCategoryOptions().map((option) => {
     const total = roundCurrency(categoryTotals.get(option.key) ?? 0)
 
     return {
